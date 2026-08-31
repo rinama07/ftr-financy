@@ -29,3 +29,4 @@
 # Operating System files
 .DS_STORE
 Thumbs.db
+/src/generated/prisma
