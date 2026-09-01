@@ -33,4 +33,7 @@ Thumbs.db
 
 # Prisma
 generated
+
+# Ignore the SQLite database
 dev.db
+dev.db-journal
