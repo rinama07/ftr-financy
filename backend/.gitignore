@@ -30,3 +30,7 @@
 .DS_STORE
 Thumbs.db
 /src/generated/prisma
+
+# Prisma
+generated
+dev.db
