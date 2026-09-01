@@ -22,7 +22,7 @@ export class AuthService {
 
     const isPasswordValid = await verifyPassword(
       data.password,
-      existingUser.password,
+      existingUser.password!,
     );
 
     if (!isPasswordValid) {
