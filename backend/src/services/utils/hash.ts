@@ -5,3 +5,10 @@ export async function getHashPassword(plainPassword: string): Promise<string> {
 
   return bcrypt.hash(plainPassword, salt);
 }
+
+export async function verifyPassword(
+  plainPassword: string,
+  hashPassword: string,
+): Promise<boolean> {
+  return bcrypt.compare(plainPassword, hashPassword);
+}
