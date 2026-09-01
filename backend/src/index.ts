@@ -1,9 +1,10 @@
-import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import express from "express";
+import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 
+import { buildContext } from "./graphql/context/index.js";
 import { AuthResolver } from "./resolvers/auth.resolver.js";
 import { UserResolver } from "./resolvers/user.resolver.js";
 
@@ -24,7 +25,11 @@ async function main() {
 
   await server.start();
 
-  app.use("/graphql", express.json(), expressMiddleware(server));
+  app.use(
+    "/graphql",
+    express.json(),
+    expressMiddleware(server, { context: buildContext }),
+  );
 
   app.listen({ port: SERVER_PORT }, () => {
     console.log(`Server running on ${SERVER_PORT}`);
