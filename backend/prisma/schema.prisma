@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  categories   Category[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  title        String        @unique
+  description  String
+  icon_name    String
+  color        String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  authorId     String
+  author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  type        TransactionType
+  description String
+  date        DateTime
+  amount      Decimal         @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  categoryId  String
+  category    Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  authorId    String
+  author      User            @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([authorId, date])
+  @@index([categoryId])
+  @@map("transactions")
+}

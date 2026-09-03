@@ -29,3 +29,11 @@
 # Operating System files
 .DS_STORE
 Thumbs.db
+/src/generated/prisma
+
+# Prisma
+generated
+
+# Ignore the SQLite database
+dev.db
+dev.db-journal
