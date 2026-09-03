@@ -32,6 +32,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+input DeleteCategoryInput {
+  id: String!
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -46,11 +50,15 @@ type LoginOutput {
 type Mutation {
   createCategory(data: CreateCategoryInput!): CategoryModel!
   createUser(data: CreateUserInput!): UserModel!
+  deleteCategory(data: DeleteCategoryInput!): CategoryModel!
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
+  updateCategory(data: UpdateCategoryInput!): CategoryModel!
 }
 
 type Query {
+  getAllCategories: [CategoryModel!]!
+  getCategory(id: String!): CategoryModel!
   getUser(id: String!): UserModel!
 }
 
@@ -64,6 +72,14 @@ type RegisterOutput {
   refreshToken: String!
   token: String!
   user: UserModel!
+}
+
+input UpdateCategoryInput {
+  color: String!
+  description: String!
+  icon_name: String!
+  id: String!
+  title: String!
 }
 
 type UserModel {

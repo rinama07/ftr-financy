@@ -2,6 +2,7 @@ import {
   Arg,
   FieldResolver,
   Mutation,
+  Query,
   Resolver,
   Root,
   UseMiddleware,
@@ -9,7 +10,11 @@ import {
 
 import type { User } from "../../generated/prisma/client";
 import { getGraphqlUser } from "../decorators/user.decorator";
-import { CreateCategoryInput } from "../dtos/input/category.input";
+import {
+  CreateCategoryInput,
+  DeleteCategoryInput,
+  UpdateCategoryInput,
+} from "../dtos/input/category.input";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 import { CategoryModel } from "../model/category.model.js";
 import { UserModel } from "../model/user.model";
@@ -22,12 +27,43 @@ export class CategoryResolver {
   private categoryService = new CategoryService();
   private userService = new UserService();
 
+  @Query(() => CategoryModel)
+  async getCategory(
+    @Arg("id", () => String) id: string,
+    @getGraphqlUser() user: User,
+  ): Promise<CategoryModel> {
+    return this.categoryService.findCategory(id, user.id);
+  }
+
+  @Query(() => [CategoryModel])
+  async getAllCategories(
+    @getGraphqlUser() user: User,
+  ): Promise<CategoryModel[]> {
+    return this.categoryService.findCategoryList(user.id);
+  }
+
   @Mutation(() => CategoryModel)
   async createCategory(
     @Arg("data", () => CreateCategoryInput) data: CreateCategoryInput,
     @getGraphqlUser() user: User,
   ): Promise<CategoryModel> {
     return this.categoryService.createCategory(data, user.id);
+  }
+
+  @Mutation(() => CategoryModel)
+  async updateCategory(
+    @Arg("data", () => UpdateCategoryInput) data: UpdateCategoryInput,
+    @getGraphqlUser() user: User,
+  ): Promise<CategoryModel> {
+    return this.categoryService.updateCategory(data, user.id);
+  }
+
+  @Mutation(() => CategoryModel)
+  async deleteCategory(
+    @Arg("data", () => DeleteCategoryInput) data: DeleteCategoryInput,
+    @getGraphqlUser() user: User,
+  ): Promise<CategoryModel> {
+    return this.categoryService.deleteCategory(data.id, user.id);
   }
 
   @FieldResolver(() => UserModel)
