@@ -1,5 +1,7 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from "type-graphql";
 
+import { Prisma } from "../../generated/prisma/client";
+import type { TransactionType } from "../../generated/prisma/enums";
 import { CategoryModel } from "./category.model";
 import { UserModel } from "./user.model";
 
@@ -9,7 +11,7 @@ export class TransactionModel {
   id!: string;
 
   @Field(() => String)
-  type!: string;
+  type!: TransactionType;
 
   @Field(() => String)
   description!: string;
@@ -18,7 +20,7 @@ export class TransactionModel {
   date!: Date;
 
   @Field(() => Number)
-  amount!: number;
+  amount!: Prisma.Decimal;
 
   @Field(() => GraphQLISODateTime)
   createdAt!: Date;
