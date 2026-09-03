@@ -12,7 +12,6 @@ import type { User } from "../../generated/prisma/client";
 import { getGraphqlUser } from "../decorators/user.decorator";
 import {
   CreateCategoryInput,
-  DeleteCategoryInput,
   UpdateCategoryInput,
 } from "../dtos/input/category.input";
 import { isAuthenticated } from "../middlewares/auth.middleware";
@@ -60,10 +59,10 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryModel)
   async deleteCategory(
-    @Arg("data", () => DeleteCategoryInput) data: DeleteCategoryInput,
+    @Arg("id", () => String) id: string,
     @getGraphqlUser() user: User,
   ): Promise<CategoryModel> {
-    return this.categoryService.deleteCategory(data.id, user.id);
+    return this.categoryService.deleteCategory(id, user.id);
   }
 
   @FieldResolver(() => UserModel)

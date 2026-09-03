@@ -32,9 +32,3 @@ export class UpdateCategoryInput {
   @Field(() => String)
   color!: string;
 }
-
-@InputType()
-export class DeleteCategoryInput {
-  @Field(() => String)
-  id!: string;
-}
