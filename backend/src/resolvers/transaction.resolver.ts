@@ -69,8 +69,8 @@ export class TransactionResolver {
   }
 
   @FieldResolver(() => UserModel)
-  async author(@Root() transaction: TransactionModel): Promise<UserModel> {
-    return this.userService.findUser(transaction.authorId);
+  async user(@Root() transaction: TransactionModel): Promise<UserModel> {
+    return this.userService.findUser(transaction.userId);
   }
 
   @FieldResolver(() => CategoryModel)
@@ -79,7 +79,7 @@ export class TransactionResolver {
   ): Promise<CategoryModel> {
     return this.categoryService.findCategory(
       transaction.categoryId,
-      transaction.authorId,
+      transaction.userId,
     );
   }
 }

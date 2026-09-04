@@ -26,8 +26,8 @@ export class CategoryModel {
   updatedAt!: Date;
 
   @Field(() => String)
-  authorId!: string;
+  userId!: string;
 
   @Field(() => UserModel, { nullable: true })
-  author?: UserModel;
+  user?: UserModel;
 }

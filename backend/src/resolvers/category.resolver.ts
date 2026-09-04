@@ -66,7 +66,7 @@ export class CategoryResolver {
   }
 
   @FieldResolver(() => UserModel)
-  async author(@Root() category: CategoryModel): Promise<UserModel> {
-    return this.userService.findUser(category.authorId);
+  async user(@Root() category: CategoryModel): Promise<UserModel> {
+    return this.userService.findUser(category.userId);
   }
 }

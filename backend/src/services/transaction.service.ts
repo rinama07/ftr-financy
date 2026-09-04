@@ -6,11 +6,11 @@ import type {
 } from "../dtos/input/transaction.input";
 
 export class TransactionService {
-  async findTransaction(id: string, authorId: string): Promise<Transaction> {
+  async findTransaction(id: string, userId: string): Promise<Transaction> {
     const transaction = await prismaClient.transaction.findUnique({
       where: {
         id,
-        authorId,
+        userId,
       },
     });
 
@@ -21,10 +21,10 @@ export class TransactionService {
     return transaction;
   }
 
-  async findTransactionList(authorId: string): Promise<Transaction[]> {
+  async findTransactionList(userId: string): Promise<Transaction[]> {
     const transactions = await prismaClient.transaction.findMany({
       where: {
-        authorId,
+        userId,
       },
     });
 
@@ -35,7 +35,7 @@ export class TransactionService {
     return transactions;
   }
 
-  async createTransaction(data: CreateTransactionInput, authorId: string) {
+  async createTransaction(data: CreateTransactionInput, userId: string) {
     return await prismaClient.transaction.create({
       data: {
         type: data.type,
@@ -43,16 +43,16 @@ export class TransactionService {
         date: data.date,
         amount: data.amount,
         categoryId: data.categoryId,
-        authorId,
+        userId,
       },
     });
   }
 
-  async updateTransaction(data: UpdateTransactionInput, authorId: string) {
+  async updateTransaction(data: UpdateTransactionInput, userId: string) {
     return await prismaClient.transaction.update({
       where: {
         id: data.id,
-        authorId,
+        userId,
       },
       data: {
         type: data.type,
@@ -64,11 +64,11 @@ export class TransactionService {
     });
   }
 
-  async deleteTransaction(transactionId: string, authorId: string) {
+  async deleteTransaction(transactionId: string, userId: string) {
     return await prismaClient.transaction.delete({
       where: {
         id: transactionId,
-        authorId,
+        userId,
       },
     });
   }

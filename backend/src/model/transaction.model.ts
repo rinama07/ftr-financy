@@ -35,8 +35,8 @@ export class TransactionModel {
   category?: CategoryModel;
 
   @Field(() => String)
-  authorId!: string;
+  userId!: string;
 
   @Field(() => UserModel, { nullable: true })
-  author?: UserModel;
+  user?: UserModel;
 }

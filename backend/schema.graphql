@@ -4,8 +4,6 @@
 # -----------------------------------------------
 
 type CategoryModel {
-  author: UserModel
-  authorId: String!
   color: String!
   createdAt: DateTimeISO!
   description: String!
@@ -13,6 +11,8 @@ type CategoryModel {
   id: ID!
   title: String!
   updatedAt: DateTimeISO!
+  user: UserModel
+  userId: String!
 }
 
 input CreateCategoryInput {
@@ -85,8 +85,6 @@ type RegisterOutput {
 
 type TransactionModel {
   amount: Float!
-  author: UserModel
-  authorId: String!
   category: CategoryModel
   categoryId: String!
   createdAt: DateTimeISO!
@@ -95,6 +93,8 @@ type TransactionModel {
   id: ID!
   type: String!
   updatedAt: DateTimeISO!
+  user: UserModel
+  userId: String!
 }
 
 input UpdateCategoryInput {
