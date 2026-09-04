@@ -1,4 +1,7 @@
-import type { Transaction } from "../../generated/prisma/client.js";
+import type {
+  Transaction,
+  TransactionType,
+} from "../../generated/prisma/client.js";
 import { prismaClient } from "../../prisma/prisma.js";
 import type {
   CreateTransactionInput,
@@ -71,5 +74,84 @@ export class TransactionService {
         userId,
       },
     });
+  }
+
+  async findTransactionByDescription(
+    description: string,
+    userId: string,
+  ): Promise<Transaction[]> {
+    console.info({ description });
+    const transactions = await prismaClient.transaction.findMany({
+      where: {
+        description: {
+          contains: description,
+        },
+        userId,
+      },
+    });
+
+    if (!transactions || transactions.length === 0) {
+      throw new Error("Transactions not found!");
+    }
+
+    return transactions;
+  }
+
+  async findTransactionByType(
+    type: TransactionType,
+    userId: string,
+  ): Promise<Transaction[]> {
+    const transactions = await prismaClient.transaction.findMany({
+      where: {
+        type,
+        userId,
+      },
+    });
+
+    if (!transactions || transactions.length === 0) {
+      throw new Error("Transactions not found!");
+    }
+
+    return transactions;
+  }
+
+  async findTransactionByCategory(
+    categoryId: string,
+    userId: string,
+  ): Promise<Transaction[]> {
+    const transactions = await prismaClient.transaction.findMany({
+      where: {
+        categoryId,
+        userId,
+      },
+    });
+
+    if (!transactions || transactions.length === 0) {
+      throw new Error("Transactions not found!");
+    }
+
+    return transactions;
+  }
+
+  async findTransactionByDateRange(
+    startDate: Date,
+    endDate: Date,
+    userId: string,
+  ): Promise<Transaction[]> {
+    const transactions = await prismaClient.transaction.findMany({
+      where: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+        userId,
+      },
+    });
+
+    if (!transactions || transactions.length === 0) {
+      throw new Error("Transactions not found!");
+    }
+
+    return transactions;
   }
 }

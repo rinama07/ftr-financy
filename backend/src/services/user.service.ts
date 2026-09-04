@@ -1,6 +1,9 @@
 import type { User } from "../../generated/prisma/client.js";
 import { prismaClient } from "../../prisma/prisma.js";
-import type { CreateUserInput } from "../dtos/input/user.input.js";
+import type {
+  CreateUserInput,
+  UpdateUserInput,
+} from "../dtos/input/user.input.js";
 
 export class UserService {
   async findUser(id: string): Promise<User> {
@@ -32,6 +35,27 @@ export class UserService {
       data: {
         name: data.name,
         email: data.email,
+      },
+    });
+  }
+
+  async updateUser(data: UpdateUserInput): Promise<User> {
+    const user = await prismaClient.user.findUnique({
+      where: {
+        id: data.id,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User does not exist!");
+    }
+
+    return prismaClient.user.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        name: data.name,
       },
     });
   }
