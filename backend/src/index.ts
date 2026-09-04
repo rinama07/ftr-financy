@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import cors from "cors";
 import express from "express";
+import { env } from "node:process";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 
@@ -10,8 +11,6 @@ import { AuthResolver } from "./resolvers/auth.resolver.js";
 import { CategoryResolver } from "./resolvers/category.resolver.js";
 import { TransactionResolver } from "./resolvers/transaction.resolver.js";
 import { UserResolver } from "./resolvers/user.resolver.js";
-
-const SERVER_PORT = 4000;
 
 async function main() {
   const app = express();
@@ -46,8 +45,8 @@ async function main() {
     expressMiddleware(server, { context: buildContext }),
   );
 
-  app.listen({ port: SERVER_PORT }, () => {
-    console.log(`Server running on ${SERVER_PORT}`);
+  app.listen({ port: env.SERVER_PORT }, () => {
+    console.log(`Server running on ${env.SERVER_PORT}`);
   });
 }
 

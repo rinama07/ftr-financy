@@ -6,11 +6,11 @@ import type {
 } from "../dtos/input/category.input";
 
 export class CategoryService {
-  async findCategory(id: string, authorId: string): Promise<Category> {
+  async findCategory(id: string, userId: string): Promise<Category> {
     const category = await prismaClient.category.findUnique({
       where: {
         id,
-        authorId,
+        userId,
       },
     });
 
@@ -21,10 +21,10 @@ export class CategoryService {
     return category;
   }
 
-  async findCategoryList(authorId: string): Promise<Category[]> {
+  async findCategoryList(userId: string): Promise<Category[]> {
     const categories = await prismaClient.category.findMany({
       where: {
-        authorId,
+        userId,
       },
     });
 
@@ -35,23 +35,23 @@ export class CategoryService {
     return categories;
   }
 
-  async createCategory(data: CreateCategoryInput, authorId: string) {
+  async createCategory(data: CreateCategoryInput, userId: string) {
     return await prismaClient.category.create({
       data: {
         title: data.title,
         description: data.description,
         icon_name: data.icon_name,
         color: data.color,
-        authorId,
+        userId,
       },
     });
   }
 
-  async updateCategory(data: UpdateCategoryInput, authorId: string) {
+  async updateCategory(data: UpdateCategoryInput, userId: string) {
     return await prismaClient.category.update({
       where: {
         id: data.id,
-        authorId,
+        userId,
       },
       data: {
         title: data.title,
@@ -62,11 +62,11 @@ export class CategoryService {
     });
   }
 
-  async deleteCategory(categoryId: string, authorId: string) {
+  async deleteCategory(categoryId: string, userId: string) {
     return await prismaClient.category.delete({
       where: {
         id: categoryId,
-        authorId,
+        userId,
       },
     });
   }
