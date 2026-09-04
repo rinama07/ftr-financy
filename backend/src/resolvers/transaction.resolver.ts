@@ -8,7 +8,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 
-import type { User } from "../../generated/prisma/client";
+import { TransactionType, type User } from "../../generated/prisma/client";
 import { getGraphqlUser } from "../decorators/user.decorator";
 import {
   CreateTransactionInput,
@@ -68,6 +68,50 @@ export class TransactionResolver {
     return this.transactionService.deleteTransaction(id, user.id);
   }
 
+  @Query(() => [TransactionModel])
+  async getAllTransactionsByDescription(
+    @Arg("description", () => String) description: string,
+    @getGraphqlUser() user: User,
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.findTransactionByDescription(
+      description,
+      user.id,
+    );
+  }
+
+  @Query(() => [TransactionModel])
+  async getAllTransactionsByType(
+    @Arg("type", () => String) type: TransactionType,
+    @getGraphqlUser() user: User,
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.findTransactionByType(type, user.id);
+  }
+
+  @Query(() => [TransactionModel])
+  async getAllTransactionsByCategory(
+    @Arg("categoryId", () => String) categoryId: string,
+    @getGraphqlUser() user: User,
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.findTransactionByCategory(
+      categoryId,
+      user.id,
+    );
+  }
+
+  @Query(() => [TransactionModel])
+  async getAllTransactionsByDateRange(
+    @Arg("startDate", () => Date) startDate: Date,
+    @Arg("endDate", () => Date) endDate: Date,
+    @getGraphqlUser() user: User,
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.findTransactionByDateRange(
+      startDate,
+      endDate,
+      user.id,
+    );
+  }
+
+  // Resolvers
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel): Promise<UserModel> {
     return this.userService.findUser(transaction.userId);

@@ -66,6 +66,10 @@ type Mutation {
 type Query {
   getAllCategories: [CategoryModel!]!
   getAllTransactions: [TransactionModel!]!
+  getAllTransactionsByCategory(categoryId: String!): [TransactionModel!]!
+  getAllTransactionsByDateRange(endDate: DateTimeISO!, startDate: DateTimeISO!): [TransactionModel!]!
+  getAllTransactionsByDescription(description: String!): [TransactionModel!]!
+  getAllTransactionsByType(type: String!): [TransactionModel!]!
   getCategory(id: String!): CategoryModel!
   getTransaction(id: String!): TransactionModel!
   getUser(id: String!): UserModel!
