@@ -6,6 +6,7 @@ import { CategoriesPage } from "./pages/CategoriesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { TransactionsPage } from "./pages/TransactionsPage";
 
 interface PrivateRouteProps {
@@ -24,6 +25,7 @@ export function PageRoutes() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
         <Route path="/" element={<DashboardPage />} />
