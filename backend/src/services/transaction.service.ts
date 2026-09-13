@@ -1,10 +1,8 @@
-import type {
-  Transaction,
-  TransactionType,
-} from "../../generated/prisma/client.js";
+import type { Prisma, Transaction } from "../../generated/prisma/client.js";
 import { prismaClient } from "../../prisma/prisma.js";
 import type {
   CreateTransactionInput,
+  TransactionFilterInput,
   UpdateTransactionInput,
 } from "../dtos/input/transaction.input";
 
@@ -31,7 +29,7 @@ export class TransactionService {
       },
     });
 
-    if (!transactions || transactions.length === 0) {
+    if (!transactions) {
       throw new Error("Transactions not found!");
     }
 
@@ -76,79 +74,38 @@ export class TransactionService {
     });
   }
 
-  async findTransactionByDescription(
-    description: string,
+  async findTransactionByFilter(
+    filter: TransactionFilterInput,
     userId: string,
   ): Promise<Transaction[]> {
-    console.info({ description });
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        description: {
-          contains: description,
-        },
-        userId,
-      },
-    });
+    const where: Prisma.TransactionWhereInput = { userId };
 
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
+    if (filter.description) {
+      where.description = {
+        contains: filter.description ?? "",
+      };
     }
 
-    return transactions;
-  }
-
-  async findTransactionByType(
-    type: TransactionType,
-    userId: string,
-  ): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        type,
-        userId,
-      },
-    });
-
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
+    if (filter.type) {
+      where.type = filter.type;
     }
 
-    return transactions;
-  }
-
-  async findTransactionByCategory(
-    categoryId: string,
-    userId: string,
-  ): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        categoryId,
-        userId,
-      },
-    });
-
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
+    if (filter.categoryId) {
+      where.categoryId = filter.categoryId;
     }
 
-    return transactions;
-  }
+    if (filter.startDate && filter.endDate) {
+      where.date = {
+        gte: filter.startDate,
+        lte: filter.endDate,
+      };
+    }
 
-  async findTransactionByDateRange(
-    startDate: Date,
-    endDate: Date,
-    userId: string,
-  ): Promise<Transaction[]> {
     const transactions = await prismaClient.transaction.findMany({
-      where: {
-        date: {
-          gte: startDate,
-          lte: endDate,
-        },
-        userId,
-      },
+      where,
     });
 
-    if (!transactions || transactions.length === 0) {
+    if (!transactions) {
       throw new Error("Transactions not found!");
     }
 

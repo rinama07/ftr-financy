@@ -8,10 +8,11 @@ import {
   UseMiddleware,
 } from "type-graphql";
 
-import { TransactionType, type User } from "../../generated/prisma/client";
+import { type User } from "../../generated/prisma/client";
 import { getGraphqlUser } from "../decorators/user.decorator";
 import {
   CreateTransactionInput,
+  TransactionFilterInput,
   UpdateTransactionInput,
 } from "../dtos/input/transaction.input";
 import { isAuthenticated } from "../middlewares/auth.middleware";
@@ -69,46 +70,11 @@ export class TransactionResolver {
   }
 
   @Query(() => [TransactionModel])
-  async getAllTransactionsByDescription(
-    @Arg("description", () => String) description: string,
+  async getTransactionsByFilter(
+    @Arg("filter", () => TransactionFilterInput) filter: TransactionFilterInput,
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByDescription(
-      description,
-      user.id,
-    );
-  }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByType(
-    @Arg("type", () => String) type: TransactionType,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByType(type, user.id);
-  }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByCategory(
-    @Arg("categoryId", () => String) categoryId: string,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByCategory(
-      categoryId,
-      user.id,
-    );
-  }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByDateRange(
-    @Arg("startDate", () => Date) startDate: Date,
-    @Arg("endDate", () => Date) endDate: Date,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByDateRange(
-      startDate,
-      endDate,
-      user.id,
-    );
+    return this.transactionService.findTransactionByFilter(filter, user.id);
   }
 
   // Resolvers

@@ -35,10 +35,10 @@ export class CategoryResolver {
   }
 
   @Query(() => [CategoryModel])
-  async getAllCategories(
+  async getAllActiveCategoriesWithCount(
     @getGraphqlUser() user: User,
   ): Promise<CategoryModel[]> {
-    return this.categoryService.findCategoryList(user.id);
+    return this.categoryService.findAllActiveCategoriesWithCount(user.id);
   }
 
   @Mutation(() => CategoryModel)

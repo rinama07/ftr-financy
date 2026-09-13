@@ -10,6 +10,7 @@ type CategoryModel {
   icon_name: String!
   id: ID!
   title: String!
+  totalTransactions: Int
   updatedAt: DateTimeISO!
   user: UserModel
   userId: String!
@@ -65,14 +66,11 @@ type Mutation {
 }
 
 type Query {
-  getAllCategories: [CategoryModel!]!
+  getAllActiveCategoriesWithCount: [CategoryModel!]!
   getAllTransactions: [TransactionModel!]!
-  getAllTransactionsByCategory(categoryId: String!): [TransactionModel!]!
-  getAllTransactionsByDateRange(endDate: DateTimeISO!, startDate: DateTimeISO!): [TransactionModel!]!
-  getAllTransactionsByDescription(description: String!): [TransactionModel!]!
-  getAllTransactionsByType(type: String!): [TransactionModel!]!
   getCategory(id: String!): CategoryModel!
   getTransaction(id: String!): TransactionModel!
+  getTransactionsByFilter(filter: TransactionFilterInput!): [TransactionModel!]!
   getUser(id: String!): UserModel!
 }
 
@@ -86,6 +84,14 @@ type RegisterOutput {
   refreshToken: String!
   token: String!
   user: UserModel!
+}
+
+input TransactionFilterInput {
+  categoryId: String
+  description: String
+  endDate: DateTimeISO
+  startDate: DateTimeISO
+  type: String
 }
 
 type TransactionModel {

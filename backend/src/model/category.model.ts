@@ -1,4 +1,4 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from "type-graphql";
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from "type-graphql";
 
 import { UserModel } from "./user.model";
 
@@ -30,4 +30,7 @@ export class CategoryModel {
 
   @Field(() => UserModel, { nullable: true })
   user?: UserModel;
+
+  @Field(() => Int, { nullable: true })
+  totalTransactions?: number;
 }

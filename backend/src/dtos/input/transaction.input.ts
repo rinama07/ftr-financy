@@ -40,3 +40,21 @@ export class UpdateTransactionInput {
   @Field(() => String)
   categoryId!: string;
 }
+
+@InputType()
+export class TransactionFilterInput {
+  @Field(() => String, { nullable: true })
+  type?: TransactionType;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  startDate?: string;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: string;
+
+  @Field(() => String, { nullable: true })
+  categoryId?: string;
+}

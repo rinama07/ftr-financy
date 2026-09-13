@@ -21,18 +21,27 @@ export class CategoryService {
     return category;
   }
 
-  async findCategoryList(userId: string): Promise<Category[]> {
+  async findAllActiveCategoriesWithCount(userId: string): Promise<Category[]> {
     const categories = await prismaClient.category.findMany({
       where: {
         userId,
+        isActive: true,
+      },
+      include: {
+        _count: {
+          select: { transactions: true },
+        },
       },
     });
 
-    if (!categories || categories.length === 0) {
+    if (!categories) {
       throw new Error("Categories not found!");
     }
 
-    return categories;
+    return categories.map((category) => ({
+      ...category,
+      totalTransactions: category._count.transactions,
+    }));
   }
 
   async createCategory(data: CreateCategoryInput, userId: string) {
@@ -63,11 +72,12 @@ export class CategoryService {
   }
 
   async deleteCategory(categoryId: string, userId: string) {
-    return await prismaClient.category.delete({
+    return await prismaClient.category.update({
       where: {
         id: categoryId,
         userId,
       },
+      data: { isActive: false },
     });
   }
 }
