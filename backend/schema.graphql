@@ -10,7 +10,8 @@ type CategoryModel {
   icon_name: String!
   id: ID!
   title: String!
-  totalTransactions: Int
+  transactionsBalance: Float
+  transactionsCount: Int
   updatedAt: DateTimeISO!
   user: UserModel
   userId: String!
@@ -34,6 +35,14 @@ input CreateTransactionInput {
 input CreateUserInput {
   email: String!
   name: String!
+}
+
+type DashboardModel {
+  balance: Float!
+  categories: [CategoryModel!]!
+  monthExpenses: Float!
+  monthIncomes: Float!
+  recentTransactions: [TransactionModel!]!
 }
 
 """
@@ -66,9 +75,10 @@ type Mutation {
 }
 
 type Query {
-  getAllActiveCategoriesWithCount: [CategoryModel!]!
+  getAllActiveCategories: [CategoryModel!]!
   getAllTransactions: [TransactionModel!]!
   getCategory(id: String!): CategoryModel!
+  getDashboardData: DashboardModel!
   getTransaction(id: String!): TransactionModel!
   getTransactionsByFilter(filter: TransactionFilterInput!): [TransactionModel!]!
   getUser(id: String!): UserModel!

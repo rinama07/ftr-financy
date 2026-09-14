@@ -40,3 +40,12 @@ export class TransactionModel {
   @Field(() => UserModel, { nullable: true })
   user?: UserModel;
 }
+
+@ObjectType()
+export class TransactionSummaryModel {
+  @Field(() => Number)
+  income!: number;
+
+  @Field(() => Number)
+  expense!: number;
+}

@@ -35,14 +35,14 @@ export class TransactionResolver {
     @Arg("id", () => String) id: string,
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel> {
-    return this.transactionService.findTransaction(id, user.id);
+    return this.transactionService.getTransaction(id, user.id);
   }
 
   @Query(() => [TransactionModel])
   async getAllTransactions(
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionList(user.id);
+    return this.transactionService.getTransactions(user.id);
   }
 
   @Mutation(() => TransactionModel)
@@ -74,20 +74,20 @@ export class TransactionResolver {
     @Arg("filter", () => TransactionFilterInput) filter: TransactionFilterInput,
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByFilter(filter, user.id);
+    return this.transactionService.getTransactionByFilter(filter, user.id);
   }
 
   // Resolvers
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel): Promise<UserModel> {
-    return this.userService.findUser(transaction.userId);
+    return this.userService.getUser(transaction.userId);
   }
 
   @FieldResolver(() => CategoryModel)
   async category(
     @Root() transaction: TransactionModel,
   ): Promise<CategoryModel> {
-    return this.categoryService.findCategory(
+    return this.categoryService.getCategory(
       transaction.categoryId,
       transaction.userId,
     );

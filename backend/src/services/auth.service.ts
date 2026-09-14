@@ -56,7 +56,7 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  generateTokens(user: User) {
+  private generateTokens(user: User): LoginOutput {
     const token = signJwt(
       {
         id: user.id,
