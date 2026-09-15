@@ -1,4 +1,5 @@
 import logo from "./assets/logo.svg";
+import { Toaster } from "./components/ui/sonner";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ function PageLayout({ children }: PageLayoutProps) {
   return (
     <div className="bg-gray-100 h-screen w-screen flex flex-col">
       {children}
+      <Toaster />
     </div>
   );
 }

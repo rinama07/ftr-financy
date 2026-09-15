@@ -19,6 +19,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -37,9 +38,13 @@ export function LoginPage() {
 
       if (loginMutate) {
         navigate("/dashboard");
+        toast.dismiss();
       }
     } catch (error) {
-      // TODO: Display toast
+      toast.error("Dados de acesso incorretos. Por favor, tente novamente!", {
+        id: "login-error-toast",
+      });
+
       console.error({ error });
     }
   };
