@@ -15,26 +15,34 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useAuthStore } from "@/store/auth.store";
 import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from "lucide-react";
 import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { useAuthStore } from "@/store/auth.store";
+import type { LoginInput } from "@/types";
+
+const FormFields = {
+  email: "email",
+  password: "password",
+} as const;
+
 export function LoginPage() {
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<LoginInput>();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = useAuthStore((state) => state.login);
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<LoginInput> = async (data) => {
+    setIsLoading(true);
 
     try {
-      const loginMutate = await login({ email, password });
+      const loginMutate = await login(data);
 
       if (loginMutate) {
         navigate("/dashboard");
@@ -46,6 +54,8 @@ export function LoginPage() {
       });
 
       console.error({ error });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -59,7 +69,7 @@ export function LoginPage() {
 
   return (
     <Card className="w-full max-w-md p-8 my-8">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldSet className="p-0 m-0">
           <FieldLegend className="w-full text-center text-gray-800">
             Fazer login
@@ -71,37 +81,35 @@ export function LoginPage() {
 
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="email">E-mail</FieldLabel>
+              <FieldLabel htmlFor={FormFields.email}>E-mail</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <Mail />
                 </InputGroupAddon>
                 <InputGroupInput
-                  id="email"
+                  id={FormFields.email}
                   type="email"
                   autoComplete="email"
                   placeholder="mail@exemplo.com"
                   className="mx-1"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
+                  {...register(FormFields.email)}
                 />
               </InputGroup>
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="password">Senha</FieldLabel>
+              <FieldLabel htmlFor={FormFields.password}>Senha</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <Lock />
                 </InputGroupAddon>
                 <InputGroupInput
-                  id="password"
+                  id={FormFields.password}
                   autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
                   className="mx-1"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                  {...register(FormFields.password)}
                 />
                 <InputGroupAddon className="text-gray-700" align="inline-end">
                   <Button
@@ -133,7 +141,12 @@ export function LoginPage() {
           </div>
         </FieldSet>
 
-        <Button type="submit" variant="default" className="w-full mt-5">
+        <Button
+          type="submit"
+          variant="default"
+          className="w-full mt-5"
+          disabled={isLoading}
+        >
           <span>Entrar</span>
         </Button>
       </form>
