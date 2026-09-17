@@ -106,7 +106,7 @@ export class TransactionService {
 
     if (filter.description) {
       where.description = {
-        contains: filter.description ?? "",
+        contains: filter.description,
       };
     }
 
@@ -150,9 +150,13 @@ export class TransactionService {
       }),
     ]);
 
+    const income = Number(incomes._sum.amount || 0);
+    const expense = Number(expenses._sum.amount || 0);
+
     return {
-      income: Number(incomes._sum.amount || 0),
-      expense: Number(expenses._sum.amount || 0),
+      balance: income - expense,
+      expense,
+      income,
     };
   }
 
@@ -175,8 +179,9 @@ export class TransactionService {
     ]);
 
     return {
-      income,
+      balance: income - expense,
       expense,
+      income,
     };
   }
 

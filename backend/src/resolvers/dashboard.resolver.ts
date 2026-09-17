@@ -17,7 +17,7 @@ export class DashboardResolver {
   async getDashboardData(
     @getGraphqlUser() user: User,
   ): Promise<DashboardModel> {
-    const [balanceTotal, monthAggregates, recentTransactions, categories] =
+    const [summary, monthAggregates, recentTransactions, categories] =
       await Promise.all([
         this.transactionService.getTotalFinancialSummary(user.id),
         this.transactionService.getCurrentMonthFinancialSummary(user.id),
@@ -25,10 +25,8 @@ export class DashboardResolver {
         this.categoryService.getAllActiveCategoriesWithMetrics(user.id),
       ]);
 
-    const balance = balanceTotal.income - balanceTotal.expense;
-
     return {
-      balance,
+      balance: summary.balance,
       monthIncomes: monthAggregates.income,
       monthExpenses: monthAggregates.expense,
       recentTransactions,

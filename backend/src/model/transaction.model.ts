@@ -44,8 +44,11 @@ export class TransactionModel {
 @ObjectType()
 export class TransactionSummaryModel {
   @Field(() => Number)
-  income!: number;
+  balance!: number;
 
   @Field(() => Number)
   expense!: number;
+
+  @Field(() => Number)
+  income!: number;
 }
