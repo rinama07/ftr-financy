@@ -21,6 +21,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth.store";
 import type { LoginInput } from "@/types";
 
@@ -159,7 +160,7 @@ export function LoginPage() {
         Ainda não tem uma conta?
       </span>
 
-      <Link to="/register">
+      <Link to={ROUTES.public.register}>
         <Button type="button" variant="outline" className="w-full">
           <UserRoundPlus />
           <span>Criar conta</span>

@@ -9,6 +9,7 @@ import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
 import { TransactionsPage } from "@/pages/TransactionsPage";
 import { useAuthStore } from "@/store/auth.store";
 import { ProtectedPageLayout, PublicPageLayout } from "./Layout";
+import { ROUTES } from "./routes";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAuthStore();
@@ -18,7 +19,7 @@ function ProtectedRoute() {
       <Outlet />
     </ProtectedPageLayout>
   ) : (
-    <Navigate to="/login" replace />
+    <Navigate to={ROUTES.public.login} replace />
   );
 }
 
@@ -26,7 +27,7 @@ function PublicRoute() {
   const { isAuthenticated } = useAuthStore();
 
   return isAuthenticated ? (
-    <Navigate to="/" replace />
+    <Navigate to={ROUTES.base} replace />
   ) : (
     <PublicPageLayout>
       <Outlet />
@@ -38,21 +39,27 @@ export function App() {
   return (
     <Routes>
       <Route element={<PublicRoute />}>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path={ROUTES.base} element={<LoginPage />} />
+        <Route path={ROUTES.public.login} element={<LoginPage />} />
+        <Route path={ROUTES.public.register} element={<RegisterPage />} />
+        <Route
+          path={ROUTES.public.reset_password}
+          element={<ResetPasswordPage />}
+        />
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/transactions" element={<TransactionsPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/account" element={<AccountPage />} />
+        <Route path={ROUTES.base} element={<DashboardPage />} />
+        <Route path={ROUTES.private.dashboard} element={<DashboardPage />} />
+        <Route
+          path={ROUTES.private.transactions}
+          element={<TransactionsPage />}
+        />
+        <Route path={ROUTES.private.categories} element={<CategoriesPage />} />
+        <Route path={ROUTES.private.account} element={<AccountPage />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to={ROUTES.base} replace />} />
     </Routes>
   );
 }

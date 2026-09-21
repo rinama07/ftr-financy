@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/routes";
 import { Link } from "react-router";
 
 export function ResetPasswordPage() {
@@ -9,7 +10,7 @@ export function ResetPasswordPage() {
         <br /> Por favor, entre em contato com o suporte.
       </h1>
 
-      <Link to="/" className="mt-10">
+      <Link to={ROUTES.base} className="mt-10">
         <Button>
           <span>Voltar para Início</span>
         </Button>

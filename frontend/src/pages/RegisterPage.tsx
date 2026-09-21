@@ -14,6 +14,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { ROUTES } from "@/routes";
 import { Eye, EyeClosed, Lock, LogIn, Mail, UserRound } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
@@ -115,7 +116,7 @@ export function RegisterPage() {
 
       <span className="text-center text-gray-600">Já tem uma conta?</span>
 
-      <Link to="/login">
+      <Link to={ROUTES.public.login}>
         <Button type="button" variant="outline" className="w-full">
           <LogIn />
           <span>Fazer login</span>
