@@ -93,6 +93,7 @@ export function LoginPage() {
                   autoComplete="email"
                   placeholder="mail@exemplo.com"
                   className="mx-1"
+                  required
                   {...register(FormFields.email)}
                 />
               </InputGroup>
@@ -110,6 +111,7 @@ export function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
                   className="mx-1"
+                  required
                   {...register(FormFields.password)}
                 />
                 <InputGroupAddon className="text-gray-700" align="inline-end">
