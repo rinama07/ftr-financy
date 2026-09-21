@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import type { UpdateUserInput } from "../dtos/input/user.input";
 import { UserResolver } from "./user.resolver";
 
 describe("UserResolver", () => {
@@ -24,13 +25,22 @@ describe("UserResolver", () => {
   });
 
   it("should delegate updateUser", async () => {
+    const user = {
+      id: "user-1",
+      name: "Jane",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      email: "user@email.com",
+      password: "abc",
+    };
+
     const resolver = new UserResolver();
     const service = (resolver as any).userService;
-    const input = { id: "user-1", name: "Jane" };
-    const result = { id: "user-1", name: "Jane" };
+    const input: UpdateUserInput = { name: user.name };
+    const result = { id: user.id, name: user.name };
     vi.spyOn(service, "updateUser").mockResolvedValue(result);
 
-    await expect(resolver.updateUser(input as any)).resolves.toEqual(result);
-    expect(service.updateUser).toHaveBeenCalledWith(input);
+    await expect(resolver.updateUser(input, user)).resolves.toEqual(result);
+    expect(service.updateUser).toHaveBeenCalledWith(input, user.id);
   });
 });

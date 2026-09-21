@@ -1,4 +1,4 @@
-import { Field, ID, InputType } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class CreateUserInput {
@@ -11,9 +11,6 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-  @Field(() => ID)
-  id!: string;
-
   @Field(() => String)
   name!: string;
 }

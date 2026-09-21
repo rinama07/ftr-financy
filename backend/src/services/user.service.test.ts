@@ -16,6 +16,7 @@ vi.mock("../../prisma/prisma.js", () => ({
   },
 }));
 
+import type { UpdateUserInput } from "../dtos/input/user.input";
 import { UserService } from "./user.service";
 
 describe("UserService", () => {
@@ -91,9 +92,11 @@ describe("UserService", () => {
       };
       mocks.update.mockResolvedValue(updated);
 
-      const data = { id: "user-1", name: "Jane" };
+      const data: UpdateUserInput = { name: "Jane" };
 
-      await expect(service.updateUser(data as any)).resolves.toEqual(updated);
+      await expect(service.updateUser(data, updated.id)).resolves.toEqual(
+        updated,
+      );
 
       expect(mocks.findUnique).toHaveBeenCalledWith({
         where: { id: "user-1" },
@@ -107,9 +110,11 @@ describe("UserService", () => {
     it("should throw when updating a missing user", async () => {
       mocks.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.updateUser({ id: "user-1", name: "Jane" } as any),
-      ).rejects.toThrow("User does not exist!");
+      const data: UpdateUserInput = { name: "Jane" };
+
+      await expect(service.updateUser(data, "")).rejects.toThrow(
+        "User does not exist!",
+      );
 
       expect(mocks.update).not.toHaveBeenCalled();
     });

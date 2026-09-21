@@ -1,5 +1,7 @@
 import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 
+import type { User } from "../../generated/prisma/client.js";
+import { getGraphqlUser } from "../decorators/user.decorator.js";
 import { CreateUserInput, UpdateUserInput } from "../dtos/input/user.input.js";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import { UserModel } from "../model/user.model.js";
@@ -25,7 +27,8 @@ export class UserResolver {
   @Mutation(() => UserModel)
   async updateUser(
     @Arg("data", () => UpdateUserInput) data: UpdateUserInput,
+    @getGraphqlUser() user: User,
   ): Promise<UserModel> {
-    return this.userService.updateUser(data);
+    return this.userService.updateUser(data, user.id);
   }
 }
