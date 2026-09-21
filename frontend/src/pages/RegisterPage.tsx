@@ -1,3 +1,8 @@
+import { Eye, EyeClosed, Lock, LogIn, Mail, UserRound } from "lucide-react";
+import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -15,16 +20,47 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { ROUTES } from "@/routes";
-import { Eye, EyeClosed, Lock, LogIn, Mail, UserRound } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router";
+import { useAuthStore } from "@/store/auth.store";
+import type { RegisterInput } from "@/types";
+import { toast } from "sonner";
+
+const FormFields = {
+  name: "name",
+  email: "email",
+  password: "password",
+} as const;
 
 export function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<RegisterInput>();
 
-  const handleSubmit = () => {
-    // TODO: Create register flow
-    alert("SUBMIT");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const signup = useAuthStore((state) => state.signup);
+
+  const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
+    setIsLoading(true);
+
+    try {
+      const registerMutate = await signup(data);
+
+      if (registerMutate) {
+        navigate(ROUTES.base);
+        toast.dismiss();
+      }
+    } catch (error) {
+      toast.error(
+        "Não foi possível concluir o registro. Por favor, tente novamente!",
+        {
+          id: "signup-error-toast",
+        },
+      );
+
+      console.error({ error });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleToggleShowPassword = () => {
@@ -33,7 +69,7 @@ export function RegisterPage() {
 
   return (
     <Card className="w-full max-w-md p-8 my-8">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldSet className="p-0 m-0">
           <FieldLegend className="w-full text-center text-gray-800">
             Criar conta
@@ -45,48 +81,55 @@ export function RegisterPage() {
 
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="name">Nome completo</FieldLabel>
+              <FieldLabel htmlFor={FormFields.name}>Nome completo</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <UserRound />
                 </InputGroupAddon>
                 <InputGroupInput
-                  id="name"
+                  id={FormFields.name}
                   type="name"
                   placeholder="Seu nome completo"
                   className="mx-1"
+                  required
+                  {...register(FormFields.name)}
                 />
               </InputGroup>
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="email">E-mail</FieldLabel>
+              <FieldLabel htmlFor={FormFields.email}>E-mail</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <Mail />
                 </InputGroupAddon>
                 <InputGroupInput
-                  id="email"
+                  id={FormFields.email}
                   type="email"
                   autoComplete="email"
                   placeholder="mail@exemplo.com"
                   className="mx-1"
+                  required
+                  {...register(FormFields.email)}
                 />
               </InputGroup>
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="password">Senha</FieldLabel>
+              <FieldLabel htmlFor={FormFields.password}>Senha</FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
                   <Lock />
                 </InputGroupAddon>
                 <InputGroupInput
-                  id="password"
+                  id={FormFields.password}
                   autoComplete="current-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
+                  minLength={8}
                   className="mx-1"
+                  required
+                  {...register(FormFields.password)}
                 />
                 <InputGroupAddon className="text-gray-700" align="inline-end">
                   <Button
@@ -105,7 +148,12 @@ export function RegisterPage() {
           </FieldGroup>
         </FieldSet>
 
-        <Button type="submit" variant="default" className="w-full mt-5">
+        <Button
+          type="submit"
+          variant="default"
+          className="w-full mt-5"
+          disabled={isLoading}
+        >
           <span>Cadastrar</span>
         </Button>
       </form>
