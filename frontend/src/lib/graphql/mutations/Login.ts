@@ -11,6 +11,7 @@ export const LOGIN: TypedDocumentNode<LoginMutationData, { data: LoginInput }> =
         user {
           id
           name
+          email
         }
       }
     }
