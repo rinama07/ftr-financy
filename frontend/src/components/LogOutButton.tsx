@@ -1,11 +1,15 @@
-import { LogOut } from "lucide-react";
-
-import { useAuthStore } from "@/store/auth.store";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+
+import { useAuthStore } from "@/store/auth.store";
 import { Button } from "./ui/button";
 
-export function LogOutButton() {
+interface LogOutButtonProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function LogOutButton({ children, className }: LogOutButtonProps) {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
 
@@ -23,8 +27,8 @@ export function LogOutButton() {
   };
 
   return (
-    <Button onClick={onLogOut}>
-      <LogOut />
+    <Button variant="outline" className={className} onClick={onLogOut}>
+      {children}
     </Button>
   );
 }
