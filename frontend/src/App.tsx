@@ -1,18 +1,29 @@
 import { Navigate, Outlet, Route, Routes } from "react-router";
 
-import { AccountPage } from "@/pages/AccountPage";
-import { CategoriesPage } from "@/pages/CategoriesPage";
-import { DashboardPage } from "@/pages/DashboardPage";
-import { LoginPage } from "@/pages/LoginPage";
-import { RegisterPage } from "@/pages/RegisterPage";
-import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
-import { TransactionsPage } from "@/pages/TransactionsPage";
-import { useAuthStore } from "@/store/auth.store";
 import { ProtectedPageLayout, PublicPageLayout } from "./Layout";
+import { AccountPage } from "./pages/AccountPage";
+import { CategoriesPage } from "./pages/CategoriesPage";
+import { DashboardPage } from "./pages/DashboardPage";
+import { LoginPage } from "./pages/LoginPage";
+import { RegisterPage } from "./pages/RegisterPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { TransactionsPage } from "./pages/TransactionsPage";
 import { ROUTES } from "./routes";
+import { useAuthStore } from "./store/auth.store";
+
+function RootRedirect() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  return (
+    <Navigate
+      to={isAuthenticated ? ROUTES.private.dashboard : ROUTES.public.login}
+      replace
+    />
+  );
+}
 
 function ProtectedRoute() {
-  const { isAuthenticated } = useAuthStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return isAuthenticated ? (
     <ProtectedPageLayout>
@@ -24,10 +35,10 @@ function ProtectedRoute() {
 }
 
 function PublicRoute() {
-  const { isAuthenticated } = useAuthStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return isAuthenticated ? (
-    <Navigate to={ROUTES.base} replace />
+    <Navigate to={ROUTES.private.dashboard} replace />
   ) : (
     <PublicPageLayout>
       <Outlet />
@@ -38,8 +49,9 @@ function PublicRoute() {
 export function App() {
   return (
     <Routes>
+      <Route path={ROUTES.base} element={<RootRedirect />} />
+
       <Route element={<PublicRoute />}>
-        <Route path={ROUTES.base} element={<LoginPage />} />
         <Route path={ROUTES.public.login} element={<LoginPage />} />
         <Route path={ROUTES.public.register} element={<RegisterPage />} />
         <Route
@@ -49,7 +61,6 @@ export function App() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path={ROUTES.base} element={<DashboardPage />} />
         <Route path={ROUTES.private.dashboard} element={<DashboardPage />} />
         <Route
           path={ROUTES.private.transactions}
