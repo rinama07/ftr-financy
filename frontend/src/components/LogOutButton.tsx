@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth.store";
-import { Button } from "./ui/button";
+import { OutlineButton } from "./buttons/OutlineButton";
 
 interface LogOutButtonProps {
   children: React.ReactNode;
@@ -27,8 +27,8 @@ export function LogOutButton({ children, className }: LogOutButtonProps) {
   };
 
   return (
-    <Button variant="outline" className={className} onClick={onLogOut}>
+    <OutlineButton className={className} onClick={onLogOut}>
       {children}
-    </Button>
+    </OutlineButton>
   );
 }

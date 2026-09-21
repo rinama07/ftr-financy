@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
+import { OutlineButton } from "@/components/buttons/OutlineButton";
+import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -69,7 +71,7 @@ export function RegisterPage() {
 
   return (
     <Card className="w-full max-w-md p-8 my-8">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <FieldSet className="p-0 m-0">
           <FieldLegend className="w-full text-center text-gray-800">
             Criar conta
@@ -132,11 +134,7 @@ export function RegisterPage() {
                   {...register(FormFields.password)}
                 />
                 <InputGroupAddon className="text-gray-700" align="inline-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={handleToggleShowPassword}
-                  >
+                  <Button variant="ghost" onClick={handleToggleShowPassword}>
                     {showPassword ? <Eye /> : <EyeClosed />}
                   </Button>
                 </InputGroupAddon>
@@ -148,14 +146,9 @@ export function RegisterPage() {
           </FieldGroup>
         </FieldSet>
 
-        <Button
-          type="submit"
-          variant="default"
-          className="w-full mt-5"
-          disabled={isLoading}
-        >
+        <PrimaryButton type="submit" disabled={isLoading}>
           <span>Cadastrar</span>
-        </Button>
+        </PrimaryButton>
       </form>
 
       <FieldSeparator className="my-2">
@@ -165,10 +158,10 @@ export function RegisterPage() {
       <span className="text-center text-gray-600">Já tem uma conta?</span>
 
       <Link to={ROUTES.public.login}>
-        <Button type="button" variant="outline" className="w-full">
+        <OutlineButton>
           <LogIn />
           <span>Fazer login</span>
-        </Button>
+        </OutlineButton>
       </Link>
     </Card>
   );

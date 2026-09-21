@@ -21,6 +21,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { LinkButton } from "@/components/buttons/LinkButton";
+import { OutlineButton } from "@/components/buttons/OutlineButton";
+import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth.store";
 import type { LoginInput } from "@/types";
@@ -70,7 +73,7 @@ export function LoginPage() {
 
   return (
     <Card className="w-full max-w-md p-8 my-8">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <FieldSet className="p-0 m-0">
           <FieldLegend className="w-full text-center text-gray-800">
             Fazer login
@@ -115,11 +118,7 @@ export function LoginPage() {
                   {...register(FormFields.password)}
                 />
                 <InputGroupAddon className="text-gray-700" align="inline-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={handleToggleShowPassword}
-                  >
+                  <Button variant="ghost" onClick={handleToggleShowPassword}>
                     {showPassword ? <Eye /> : <EyeClosed />}
                   </Button>
                 </InputGroupAddon>
@@ -133,25 +132,15 @@ export function LoginPage() {
               <FieldLabel htmlFor="remember-user">Lembrar-me</FieldLabel>
             </Field>
 
-            <Button
-              type="button"
-              variant="link"
-              className="text-brand-base m-0 p-0"
-              onClick={handleResetPassword}
-            >
+            <LinkButton onClick={handleResetPassword}>
               <span>Recuperar senha</span>
-            </Button>
+            </LinkButton>
           </div>
         </FieldSet>
 
-        <Button
-          type="submit"
-          variant="default"
-          className="w-full mt-5"
-          disabled={isLoading}
-        >
+        <PrimaryButton type="submit" disabled={isLoading}>
           <span>Entrar</span>
-        </Button>
+        </PrimaryButton>
       </form>
 
       <FieldSeparator className="my-2">
@@ -163,10 +152,10 @@ export function LoginPage() {
       </span>
 
       <Link to={ROUTES.public.register}>
-        <Button type="button" variant="outline" className="w-full">
+        <OutlineButton>
           <UserRoundPlus />
           <span>Criar conta</span>
-        </Button>
+        </OutlineButton>
       </Link>
     </Card>
   );
