@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,7 +14,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Eye, EyeClosed, Lock, Mail, UserRoundPlus } from "lucide-react";
+import { Mail, UserRoundPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -24,6 +23,7 @@ import { toast } from "sonner";
 import { LinkButton } from "@/components/buttons/LinkButton";
 import { OutlineButton } from "@/components/buttons/OutlineButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { PasswordField } from "@/components/forms/PasswordField";
 import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth.store";
 import type { LoginInput } from "@/types";
@@ -37,7 +37,6 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<LoginInput>();
 
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const login = useAuthStore((state) => state.login);
@@ -61,10 +60,6 @@ export function LoginPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleToggleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleResetPassword = () => {
@@ -102,28 +97,13 @@ export function LoginPage() {
               </InputGroup>
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor={FormFields.password}>Senha</FieldLabel>
-              <InputGroup>
-                <InputGroupAddon>
-                  <Lock />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id={FormFields.password}
-                  autoComplete="current-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Digite sua senha"
-                  className="mx-1"
-                  required
-                  {...register(FormFields.password)}
-                />
-                <InputGroupAddon className="text-gray-700" align="inline-end">
-                  <Button variant="ghost" onClick={handleToggleShowPassword}>
-                    {showPassword ? <Eye /> : <EyeClosed />}
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
-            </Field>
+            <PasswordField
+              id={FormFields.password}
+              label="Senha"
+              placeholder="Digite sua senha"
+              required
+              {...register(FormFields.password)}
+            />
           </FieldGroup>
 
           <div className="flex flex-row">

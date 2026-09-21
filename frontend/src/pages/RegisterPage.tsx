@@ -1,11 +1,11 @@
-import { Eye, EyeClosed, Lock, LogIn, Mail, UserRound } from "lucide-react";
+import { LogIn, Mail, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
 import { OutlineButton } from "@/components/buttons/OutlineButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
-import { Button } from "@/components/ui/button";
+import { PasswordField } from "@/components/forms/PasswordField";
 import { Card } from "@/components/ui/card";
 import {
   Field,
@@ -36,7 +36,6 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<RegisterInput>();
 
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const signup = useAuthStore((state) => state.signup);
@@ -63,10 +62,6 @@ export function RegisterPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleToggleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
@@ -117,32 +112,15 @@ export function RegisterPage() {
               </InputGroup>
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor={FormFields.password}>Senha</FieldLabel>
-              <InputGroup>
-                <InputGroupAddon>
-                  <Lock />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id={FormFields.password}
-                  autoComplete="current-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Digite sua senha"
-                  minLength={8}
-                  className="mx-1"
-                  required
-                  {...register(FormFields.password)}
-                />
-                <InputGroupAddon className="text-gray-700" align="inline-end">
-                  <Button variant="ghost" onClick={handleToggleShowPassword}>
-                    {showPassword ? <Eye /> : <EyeClosed />}
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
-              <FieldDescription>
-                A senha deve ter no mínimo 8 caracteres
-              </FieldDescription>
-            </Field>
+            <PasswordField
+              id={FormFields.password}
+              description="A senha deve ter no mínimo 8 caracteres"
+              label="Senha"
+              minLength={8}
+              placeholder="Digite sua senha"
+              required
+              {...register(FormFields.password)}
+            />
           </FieldGroup>
         </FieldSet>
 
