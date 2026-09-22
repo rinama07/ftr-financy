@@ -52,7 +52,7 @@ export function ProtectedPageLayout({ children }: PageLayoutProps) {
 
   return (
     <PageLayout>
-      <div className="flex-1 flex flex-col py-12">
+      <div className="flex-1 flex flex-col py-12 px-12">
         <header className="flex flex-row items-center justify-between gap-8">
           <Logo className="h-6" />
 
