@@ -80,7 +80,7 @@ export function AccountPage() {
                 addon={<UserRound />}
                 required
                 {...register(FormFields.name, {
-                  value: user.name,
+                  value: user?.name,
                 })}
               />
 

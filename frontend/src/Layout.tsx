@@ -11,7 +11,7 @@ interface PageLayoutProps {
 
 function PageLayout({ children }: PageLayoutProps) {
   return (
-    <div className="bg-gray-100 h-screen w-screen flex flex-col items-center overflow-hidden">
+    <div className="bg-gray-100 h-screen w-screen flex flex-col items-stretch gap-8 pb-4 overflow-hidden">
       {children}
       <Toaster />
     </div>
@@ -21,13 +21,9 @@ function PageLayout({ children }: PageLayoutProps) {
 export function PublicPageLayout({ children }: PageLayoutProps) {
   return (
     <PageLayout>
-      <header className="mt-12 mb-8">
-        <Logo className="h-8" />
-      </header>
+      <Logo className="h-8 mt-12" />
 
-      <main className="flex flex-col flex-1 w-full items-center">
-        {children}
-      </main>
+      <main className="flex flex-col items-center">{children}</main>
     </PageLayout>
   );
 }
@@ -50,7 +46,7 @@ export function ProtectedPageLayout({ children }: PageLayoutProps) {
 
   return (
     <PageLayout>
-      <header className="flex flex-row items-center justify-between gap-8 py-4 px-12 mb-12">
+      <header className="flex flex-row items-center justify-center gap-8 py-4 px-12">
         <Logo className="h-6" />
 
         <nav className="flex flex-row gap-5">
@@ -72,7 +68,7 @@ export function ProtectedPageLayout({ children }: PageLayoutProps) {
         </NavLink>
       </header>
 
-      <main className="flex flex-col flex-1 w-full items-center">
+      <main className="flex flex-col flex-1 w-full items-center p-12">
         {children}
       </main>
     </PageLayout>

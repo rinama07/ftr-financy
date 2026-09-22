@@ -5,7 +5,7 @@ import { ROUTES } from "@/routes";
 
 export function ResetPasswordPage() {
   return (
-    <div className="h-screen flex flex-col items-center justify-center p-12">
+    <div className="h-screen flex flex-col items-center justify-center">
       <h1 className="text-center">
         Funcionalidade não implementada!
         <br /> Por favor, entre em contato com o suporte.
