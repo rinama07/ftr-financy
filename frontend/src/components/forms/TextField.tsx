@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import type { ComponentProps } from "react";
 
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
@@ -30,12 +29,7 @@ export function TextField({
       <InputGroup>
         {addon && <InputGroupAddon>{addon}</InputGroupAddon>}
 
-        <InputGroupInput
-          {...props}
-          id={id}
-          type={type}
-          className={clsx("mx-1", className)}
-        />
+        <InputGroupInput {...props} id={id} type={type} className={className} />
       </InputGroup>
 
       {description && <FieldDescription>{description}</FieldDescription>}

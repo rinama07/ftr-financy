@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Mail } from "lucide-react";
 import type { ComponentProps } from "react";
 
@@ -34,7 +33,7 @@ export function EmailField({
         <InputGroupInput
           {...props}
           autoComplete="email"
-          className={clsx("mx-1", className)}
+          className={className}
           id={id}
           placeholder={placeholder ?? "mail@exemplo.com"}
           type="email"
