@@ -1,7 +1,7 @@
-import { apolloClient } from "@/lib/graphql/apollo";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { apolloClient } from "@/lib/graphql/apollo";
 import type { LoginInput, RegisterInput } from "@/types";
 import { authService } from "./auth.service";
 import type { AuthState } from "./auth.types";

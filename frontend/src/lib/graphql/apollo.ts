@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { SetContextLink } from "@apollo/client/link/context";
 
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from "@/store/auth/auth.store";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_BACKEND_URL,

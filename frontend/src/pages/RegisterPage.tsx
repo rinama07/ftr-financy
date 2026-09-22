@@ -18,7 +18,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { ROUTES } from "@/routes";
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from "@/store/auth/auth.store";
 import type { RegisterInput } from "@/types";
 
 const FormFields = {

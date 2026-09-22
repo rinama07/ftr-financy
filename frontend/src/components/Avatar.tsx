@@ -1,6 +1,7 @@
-import { useAuthStore } from "@/store/auth.store";
-import { getUserNameInitials } from "@/utils/user";
 import { clsx } from "cn";
+
+import { useAuthStore } from "@/store/auth/auth.store";
+import { getUserNameInitials } from "@/utils/user";
 
 interface AvatarProps {
   className?: string;

@@ -21,7 +21,7 @@ import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { EmailField } from "@/components/forms/EmailField";
 import { PasswordField } from "@/components/forms/PasswordField";
 import { ROUTES } from "@/routes";
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from "@/store/auth/auth.store";
 import type { LoginInput } from "@/types";
 
 const FormFields = {

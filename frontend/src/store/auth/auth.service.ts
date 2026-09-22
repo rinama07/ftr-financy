@@ -1,7 +1,5 @@
 import { apolloClient } from "@/lib/graphql/apollo";
-
-import { LOGIN } from "@/lib/graphql/mutations/Login";
-import { REGISTER } from "@/lib/graphql/mutations/Register";
+import { LOGIN, REGISTER } from "@/lib/graphql/auth/mutations";
 import type { LoginInput, RegisterInput } from "@/types";
 
 export const authService = {

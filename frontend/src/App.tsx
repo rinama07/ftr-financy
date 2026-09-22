@@ -9,7 +9,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { TransactionsPage } from "./pages/TransactionsPage";
 import { ROUTES } from "./routes";
-import { useAuthStore } from "./store/auth.store";
+import { useAuthStore } from "./store/auth/auth.store";
 
 function RootRedirect() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);

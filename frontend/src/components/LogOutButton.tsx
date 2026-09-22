@@ -1,13 +1,12 @@
+import type { ComponentProps } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from "@/store/auth/auth.store";
 import { OutlineButton } from "./buttons/OutlineButton";
+import type { Button } from "./ui/button";
 
-interface LogOutButtonProps {
-  children: React.ReactNode;
-  className?: string;
-}
+type LogOutButtonProps = ComponentProps<typeof Button>;
 
 export function LogOutButton({ children, className }: LogOutButtonProps) {
   const navigate = useNavigate();
