@@ -1,10 +1,11 @@
-import { LogIn, Mail, UserRound } from "lucide-react";
+import { LogIn, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
 import { OutlineButton } from "@/components/buttons/OutlineButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { EmailField } from "@/components/forms/EmailField";
 import { PasswordField } from "@/components/forms/PasswordField";
 import { Card } from "@/components/ui/card";
 import {
@@ -94,27 +95,17 @@ export function RegisterPage() {
               </InputGroup>
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor={FormFields.email}>E-mail</FieldLabel>
-              <InputGroup>
-                <InputGroupAddon>
-                  <Mail />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id={FormFields.email}
-                  type="email"
-                  autoComplete="email"
-                  placeholder="mail@exemplo.com"
-                  className="mx-1"
-                  required
-                  {...register(FormFields.email)}
-                />
-              </InputGroup>
-            </Field>
+            <EmailField
+              id={FormFields.email}
+              label="E-mail"
+              placeholder="mail@exemplo.com"
+              required
+              {...register(FormFields.email)}
+            />
 
             <PasswordField
-              id={FormFields.password}
               description="A senha deve ter no mínimo 8 caracteres"
+              id={FormFields.password}
               label="Senha"
               minLength={8}
               placeholder="Digite sua senha"

@@ -9,12 +9,7 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import { Mail, UserRoundPlus } from "lucide-react";
+import { UserRoundPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -23,6 +18,7 @@ import { toast } from "sonner";
 import { LinkButton } from "@/components/buttons/LinkButton";
 import { OutlineButton } from "@/components/buttons/OutlineButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { EmailField } from "@/components/forms/EmailField";
 import { PasswordField } from "@/components/forms/PasswordField";
 import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth.store";
@@ -79,23 +75,13 @@ export function LoginPage() {
           </FieldDescription>
 
           <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor={FormFields.email}>E-mail</FieldLabel>
-              <InputGroup>
-                <InputGroupAddon>
-                  <Mail />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id={FormFields.email}
-                  type="email"
-                  autoComplete="email"
-                  placeholder="mail@exemplo.com"
-                  className="mx-1"
-                  required
-                  {...register(FormFields.email)}
-                />
-              </InputGroup>
-            </Field>
+            <EmailField
+              id={FormFields.email}
+              label="E-mail"
+              placeholder="mail@exemplo.com"
+              required
+              {...register(FormFields.email)}
+            />
 
             <PasswordField
               id={FormFields.password}
