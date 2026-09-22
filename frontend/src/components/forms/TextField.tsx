@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { Mail } from "lucide-react";
 import type { ComponentProps } from "react";
 
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -9,32 +8,32 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-type EmailFieldProps = Omit<ComponentProps<typeof InputGroupInput>, "type"> & {
+type TextFieldProps = ComponentProps<typeof InputGroupInput> & {
+  addon: React.ReactNode;
   label: string;
   description?: string;
 };
 
-export function EmailField({
+export function TextField({
+  addon,
   className,
   id,
   label,
+  type,
   ...props
-}: EmailFieldProps) {
+}: TextFieldProps) {
   return (
     <Field>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
 
       <InputGroup>
-        <InputGroupAddon>
-          <Mail />
-        </InputGroupAddon>
+        {addon && <InputGroupAddon>{addon}</InputGroupAddon>}
 
         <InputGroupInput
           {...props}
-          autoComplete="email"
-          className={clsx("mx-1", className)}
           id={id}
-          type="email"
+          type={type}
+          className={clsx("mx-1", className)}
         />
       </InputGroup>
     </Field>

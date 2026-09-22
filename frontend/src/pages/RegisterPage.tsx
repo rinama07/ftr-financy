@@ -2,30 +2,24 @@ import { LogIn, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 import { OutlineButton } from "@/components/buttons/OutlineButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { EmailField } from "@/components/forms/EmailField";
 import { PasswordField } from "@/components/forms/PasswordField";
+import { TextField } from "@/components/forms/TextField";
 import { Card } from "@/components/ui/card";
 import {
-  Field,
   FieldDescription,
   FieldGroup,
-  FieldLabel,
   FieldLegend,
   FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth.store";
 import type { RegisterInput } from "@/types";
-import { toast } from "sonner";
 
 const FormFields = {
   name: "name",
@@ -78,22 +72,14 @@ export function RegisterPage() {
           </FieldDescription>
 
           <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor={FormFields.name}>Nome completo</FieldLabel>
-              <InputGroup>
-                <InputGroupAddon>
-                  <UserRound />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id={FormFields.name}
-                  type="name"
-                  placeholder="Seu nome completo"
-                  className="mx-1"
-                  required
-                  {...register(FormFields.name)}
-                />
-              </InputGroup>
-            </Field>
+            <TextField
+              id={FormFields.name}
+              label="Nome completo"
+              type="name"
+              placeholder="Seu nome completo"
+              addon={<UserRound />}
+              {...register(FormFields.name)}
+            />
 
             <EmailField
               id={FormFields.email}

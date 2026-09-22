@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Eye, EyeClosed, Lock } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useId, useState } from "react";
@@ -9,7 +10,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
 
 type PasswordFieldProps = Omit<
   ComponentProps<typeof InputGroupInput>,
@@ -46,7 +46,7 @@ export function PasswordField({
           {...props}
           id={inputId}
           type={showPassword ? "text" : "password"}
-          className={cn("mx-1", className)}
+          className={clsx("mx-1", className)}
         />
 
         <InputGroupAddon align="inline-end" className="text-gray-700">
