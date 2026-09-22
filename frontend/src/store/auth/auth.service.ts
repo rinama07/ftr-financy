@@ -1,5 +1,6 @@
 import { apolloClient } from "@/lib/graphql/apollo";
 import { LOGIN, REGISTER } from "@/lib/graphql/auth/mutations";
+import { UPDATE_USER } from "@/lib/graphql/user/mutations";
 import type { LoginInput, RegisterInput } from "@/types";
 
 export const authService = {
@@ -30,5 +31,18 @@ export const authService = {
     });
 
     return data?.register ?? null;
+  },
+
+  async updateUser(name: string) {
+    const { data } = await apolloClient.mutate({
+      mutation: UPDATE_USER,
+      variables: {
+        data: {
+          name,
+        },
+      },
+    });
+
+    return data?.updateUser ?? null;
   },
 };

@@ -7,4 +7,5 @@ export interface AuthState {
   login: (data: LoginInput) => Promise<boolean>;
   logout: () => void;
   signup: (data: RegisterInput) => Promise<boolean>;
+  updateUser: (name: string) => Promise<boolean>;
 }

@@ -60,6 +60,30 @@ export const useAuthStore = create<AuthState>()(
           throw error;
         }
       },
+
+      updateUser: async (name: string) => {
+        try {
+          const user = await authService.updateUser(name);
+          console.log({ user });
+
+          if (!user) {
+            return false;
+          }
+
+          if (user) {
+            set({
+              user,
+            });
+
+            return true;
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Couldn't update user", error);
+          throw error;
+        }
+      },
     }),
     {
       name: "auth-storage",
