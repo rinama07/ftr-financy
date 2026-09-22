@@ -77,16 +77,12 @@ export function LoginPage() {
           <FieldGroup>
             <EmailField
               id={FormFields.email}
-              label="E-mail"
-              placeholder="mail@exemplo.com"
               required
               {...register(FormFields.email)}
             />
 
             <PasswordField
               id={FormFields.password}
-              label="Senha"
-              placeholder="Digite sua senha"
               required
               {...register(FormFields.password)}
             />

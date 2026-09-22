@@ -15,15 +15,16 @@ type PasswordFieldProps = Omit<
   ComponentProps<typeof InputGroupInput>,
   "type"
 > & {
-  label: string;
   description?: string;
+  label?: string;
 };
 
 export function PasswordField({
-  id,
-  label,
   className,
   description,
+  id,
+  label,
+  placeholder,
   ...props
 }: PasswordFieldProps) {
   const generatedId = useId();
@@ -35,7 +36,7 @@ export function PasswordField({
 
   return (
     <Field>
-      <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
+      <FieldLabel htmlFor={inputId}>{label ?? "Senha"}</FieldLabel>
 
       <InputGroup>
         <InputGroupAddon>
@@ -47,6 +48,7 @@ export function PasswordField({
           id={inputId}
           type={showPassword ? "text" : "password"}
           className={clsx("mx-1", className)}
+          placeholder={placeholder ?? "Digite sua senha"}
         />
 
         <InputGroupAddon align="inline-end" className="text-gray-700">

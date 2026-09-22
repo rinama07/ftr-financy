@@ -83,8 +83,6 @@ export function RegisterPage() {
 
             <EmailField
               id={FormFields.email}
-              label="E-mail"
-              placeholder="mail@exemplo.com"
               required
               {...register(FormFields.email)}
             />
@@ -92,9 +90,7 @@ export function RegisterPage() {
             <PasswordField
               description="A senha deve ter no mínimo 8 caracteres"
               id={FormFields.password}
-              label="Senha"
               minLength={8}
-              placeholder="Digite sua senha"
               required
               {...register(FormFields.password)}
             />
