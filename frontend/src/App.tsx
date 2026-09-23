@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router";
+import { toast } from "sonner";
 
+import { APP_EVENTS } from "./constants/events";
 import { ProtectedPageLayout, PublicPageLayout } from "./Layout";
 import { AccountPage } from "./pages/AccountPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
@@ -47,6 +50,28 @@ function PublicRoute() {
 }
 
 export function App() {
+  const logout = useAuthStore((state) => state.logout);
+
+  useEffect(() => {
+    const handleUnauthenticated = () => {
+      logout();
+
+      toast.error("Sua sessão expirou. Faça login novamente.");
+    };
+
+    window.addEventListener(
+      APP_EVENTS.AUTH_UNAUTHENTICATED,
+      handleUnauthenticated,
+    );
+
+    return () => {
+      window.removeEventListener(
+        APP_EVENTS.AUTH_UNAUTHENTICATED,
+        handleUnauthenticated,
+      );
+    };
+  }, [logout]);
+
   return (
     <Routes>
       <Route path={ROUTES.base} element={<RootRedirect />} />

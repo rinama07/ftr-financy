@@ -7,6 +7,7 @@ import {
 import { SetContextLink } from "@apollo/client/link/context";
 
 import { useAuthStore } from "@/store/auth/auth.store";
+import { errorLink } from "./error-link";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_BACKEND_URL,
@@ -24,6 +25,6 @@ const authLink = new SetContextLink((prevContext) => {
 });
 
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([authLink, httpLink]),
+  link: ApolloLink.from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
 });
