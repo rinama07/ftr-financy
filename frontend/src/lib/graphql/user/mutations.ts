@@ -1,6 +1,6 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
 
-import type { UpdateUserInput } from "@/types/User";
+import type { UpdateUserInput } from "@/types";
 import type { UpdateUserMutationData } from "./types";
 
 export const UPDATE_USER: TypedDocumentNode<
