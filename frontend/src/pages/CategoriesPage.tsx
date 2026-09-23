@@ -1,74 +1,168 @@
+import { useMutation, useQuery } from "@apollo/client/react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
+import { CategoryDialog } from "@/components/categories/CategoryDialog";
+import { CategoryGrid } from "@/components/categories/CategoryGrid";
+import { CategoryGridSkeleton } from "@/components/categories/CategoryGridSkeleton";
+import { CategoryHighlights } from "@/components/categories/CategoryHighlights";
+import { DeleteCategoryDialog } from "@/components/categories/DeleteCategoryDialog";
 import { Card } from "@/components/ui/card";
-import { ArrowUpDown, Plus, Tag, Utensils } from "lucide-react";
+import { DELETE_CATEGORY } from "@/lib/graphql/category/mutations";
+import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
+import type { Category } from "@/types";
+
+type CategoryDialogState = {
+  mode: "create" | "edit";
+  category?: Category;
+} | null;
 
 export function CategoriesPage() {
-  const highlightIconClassName = "w-8 h-8";
-  const highlightCardClassName = "flex flex-row items-start gap-4 p-6";
-  const highlightValueClassName = "font-bold text-gray-800 text-2xl";
-  const highlightLabelClassName = "font-medium text-xs text-gray-500 uppercase";
+  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
 
-  const items = [
-    { id: "1", title: "Alimentação", icon_name: "", color: "", items: 0 },
-    { id: "2", title: "Entretenimento", icon_name: "", color: "", items: 0 },
-    { id: "3", title: "Investimento", icon_name: "", color: "", items: 0 },
-    { id: "4", title: "Mercado", icon_name: "", color: "", items: 0 },
-    { id: "5", title: "Salário", icon_name: "", color: "", items: 0 },
-  ];
+  const [deleteCategory, { loading: deleting, error: deleteError }] =
+    useMutation(DELETE_CATEGORY);
+
+  const [categoryDialog, setCategoryDialog] =
+    useState<CategoryDialogState>(null);
+
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+    null,
+  );
+
+  const categories = data?.getAllActiveCategories ?? [];
+
+  const handleCreate = () => {
+    setCategoryDialog({
+      mode: "create",
+    });
+  };
+
+  const handleEdit = (category: Category) => {
+    setCategoryDialog({
+      mode: "edit",
+      category,
+    });
+  };
+
+  const handleDeleteRequest = (category: Category) => {
+    setCategoryToDelete(category);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!categoryToDelete) {
+      return;
+    }
+
+    try {
+      await deleteCategory({
+        variables: {
+          data: {
+            deleteCategoryId: categoryToDelete.id,
+          },
+        },
+      });
+
+      await refetch();
+
+      setCategoryToDelete(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-row items-end justify-between gap-4">
-        <p className="flex-1">
-          <h1 className="font-bold text-2xl text-gray-800">Categorias</h1>
-          <span className="text-gray-600 ">
-            Organize suas transações por categorias
-          </span>
-        </p>
-
-        <PrimaryButton size="sm" className="w-auto">
-          <Plus />
-          <span>Nova categoria</span>
-        </PrimaryButton>
-      </div>
-
-      <div className="flex flex-row justify-center gap-6">
-        <Card className={highlightCardClassName}>
-          <Tag className={highlightIconClassName} />
+    <>
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className={highlightValueClassName}>8</span>
-            <h2 className={highlightLabelClassName}>Total de categorias</h2>
+            <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
+
+            <p className="mt-1 text-gray-600">
+              Organize suas transações por categorias
+            </p>
           </div>
-        </Card>
 
-        <Card className={highlightCardClassName}>
-          <ArrowUpDown className={highlightIconClassName} />
-          <div>
-            <span className={highlightValueClassName}>27</span>
-            <h2 className={highlightLabelClassName}>Total de transações</h2>
-          </div>
-        </Card>
+          <PrimaryButton
+            type="button"
+            size="sm"
+            className="w-full sm:w-auto"
+            onClick={handleCreate}
+          >
+            <Plus />
+            <span>Nova categoria</span>
+          </PrimaryButton>
+        </header>
 
-        <Card className={highlightCardClassName}>
-          <Utensils className={highlightIconClassName} />
-          <div>
-            <span className={highlightValueClassName}>Alimentação</span>
-            <h2 className={highlightLabelClassName}>
-              Categoria mais utilizada
+        {error ? (
+          <Card className="flex flex-col items-center gap-4 p-8 text-center">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Não foi possível carregar as categorias
             </h2>
-          </div>
-        </Card>
+
+            <p className="text-sm text-gray-600">
+              Tente novamente em alguns instantes.
+            </p>
+
+            <PrimaryButton type="button" size="sm" onClick={() => refetch()}>
+              Tentar novamente
+            </PrimaryButton>
+          </Card>
+        ) : loading ? (
+          <CategoryGridSkeleton />
+        ) : categories.length === 0 ? (
+          <Card className="flex flex-col items-center gap-4 p-10 text-center">
+            <h2 className="text-lg font-semibold text-gray-800">
+              Nenhuma categoria cadastrada
+            </h2>
+
+            <p className="max-w-md text-sm text-gray-600">
+              Crie sua primeira categoria para começar a organizar suas
+              transações.
+            </p>
+
+            <PrimaryButton type="button" size="sm" onClick={handleCreate}>
+              <Plus />
+              Nova categoria
+            </PrimaryButton>
+          </Card>
+        ) : (
+          <>
+            <CategoryHighlights categories={categories} />
+
+            <CategoryGrid
+              categories={categories}
+              onEdit={handleEdit}
+              onDelete={handleDeleteRequest}
+            />
+          </>
+        )}
       </div>
 
-      <ul className="flex flex-row gap-4">
-        {items.map((item) => (
-          <li key={item.id} className="">
-            <Card>
-              <span>{item.title}</span>
-            </Card>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <CategoryDialog
+        open={categoryDialog !== null}
+        mode={categoryDialog?.mode ?? "create"}
+        category={categoryDialog?.category ?? null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setCategoryDialog(null);
+          }
+        }}
+      />
+
+      <DeleteCategoryDialog
+        open={categoryToDelete !== null}
+        category={categoryToDelete}
+        loading={deleting}
+        error={deleteError}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setCategoryToDelete(null);
+          }
+        }}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 }
