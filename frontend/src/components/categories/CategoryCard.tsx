@@ -1,20 +1,14 @@
-import {
-  BriefcaseBusiness,
-  Car,
-  HeartPulse,
-  Package,
-  Pencil,
-  PiggyBank,
-  ShoppingCart,
-  Tag,
-  Ticket,
-  Trash2,
-  Utensils,
-} from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { Category } from "@/types";
+import {
+  CATEGORY_COLORS,
+  CATEGORY_ICONS,
+  DEFAULT_CATEGORY_COLOR,
+  DEFAULT_CATEGORY_ICON,
+} from "./category.constants";
 
 type CategoryCardProps = {
   category: Category;
@@ -22,57 +16,13 @@ type CategoryCardProps = {
   onDelete: (category: Category) => void;
 };
 
-const iconMap = {
-  food: Utensils,
-  entertainment: Ticket,
-  investment: PiggyBank,
-  market: ShoppingCart,
-  salary: BriefcaseBusiness,
-  health: HeartPulse,
-  transport: Car,
-  utilities: Package,
-} as const;
-
-const colorMap = {
-  blue: {
-    icon: "bg-blue-100 text-blue-600",
-    badge: "bg-blue-100 text-blue-700",
-  },
-  pink: {
-    icon: "bg-pink-100 text-pink-600",
-    badge: "bg-pink-100 text-pink-700",
-  },
-  green: {
-    icon: "bg-green-100 text-green-600",
-    badge: "bg-green-100 text-green-700",
-  },
-  orange: {
-    icon: "bg-orange-100 text-orange-600",
-    badge: "bg-orange-100 text-orange-700",
-  },
-  red: {
-    icon: "bg-red-100 text-red-600",
-    badge: "bg-red-100 text-red-700",
-  },
-  purple: {
-    icon: "bg-purple-100 text-purple-600",
-    badge: "bg-purple-100 text-purple-700",
-  },
-  yellow: {
-    icon: "bg-yellow-100 text-yellow-700",
-    badge: "bg-yellow-100 text-yellow-700",
-  },
-} as const;
-
 export function CategoryCard({
   category,
   onEdit,
   onDelete,
 }: CategoryCardProps) {
-  const Icon = iconMap[category.icon_name as keyof typeof iconMap] ?? Tag;
-
-  const theme =
-    colorMap[category.color as keyof typeof colorMap] ?? colorMap.blue;
+  const Icon = CATEGORY_ICONS[category.icon_name] ?? DEFAULT_CATEGORY_ICON;
+  const theme = CATEGORY_COLORS[category.color] ?? DEFAULT_CATEGORY_COLOR;
 
   const transactionLabel = category.transactionsCount === 1 ? "item" : "itens";
 
