@@ -11,7 +11,7 @@ interface PageLayoutProps {
 
 function PageLayout({ children }: PageLayoutProps) {
   return (
-    <div className="bg-gray-100 h-screen w-screen flex flex-col items-stretch gap-8 pb-4 overflow-hidden">
+    <div className="bg-gray-100 h-screen w-screen flex flex-col items-stretch gap-8 pb-4 overflow-x-hidden">
       {children}
       <Toaster />
     </div>
