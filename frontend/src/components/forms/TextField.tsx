@@ -1,6 +1,11 @@
 import type { ComponentProps } from "react";
 
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -8,8 +13,9 @@ import {
 } from "@/components/ui/input-group";
 
 type TextFieldProps = ComponentProps<typeof InputGroupInput> & {
-  addon: React.ReactNode;
+  addon?: React.ReactNode;
   description?: string;
+  errorMessage?: string;
   label: string;
 };
 
@@ -17,6 +23,7 @@ export function TextField({
   addon,
   className,
   description,
+  errorMessage,
   id,
   label,
   type,
@@ -33,6 +40,8 @@ export function TextField({
       </InputGroup>
 
       {description && <FieldDescription>{description}</FieldDescription>}
+
+      {errorMessage && <FieldError>{errorMessage}</FieldError>}
     </Field>
   );
 }

@@ -1,7 +1,12 @@
 import { Mail } from "lucide-react";
 import type { ComponentProps } from "react";
 
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -10,12 +15,14 @@ import {
 
 type EmailFieldProps = Omit<ComponentProps<typeof InputGroupInput>, "type"> & {
   description?: string;
+  errorMessage?: string;
   label?: string;
 };
 
 export function EmailField({
   className,
   description,
+  errorMessage,
   id,
   label,
   placeholder,
@@ -41,6 +48,8 @@ export function EmailField({
       </InputGroup>
 
       {description && <FieldDescription>{description}</FieldDescription>}
+
+      {errorMessage && <FieldError>{errorMessage}</FieldError>}
     </Field>
   );
 }

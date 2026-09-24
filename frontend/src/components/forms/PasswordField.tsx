@@ -3,7 +3,12 @@ import type { ComponentProps } from "react";
 import { useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -15,12 +20,14 @@ type PasswordFieldProps = Omit<
   "type"
 > & {
   description?: string;
+  errorMessage?: string;
   label?: string;
 };
 
 export function PasswordField({
   className,
   description,
+  errorMessage,
   id,
   label,
   placeholder,
@@ -62,6 +69,8 @@ export function PasswordField({
       </InputGroup>
 
       {description && <FieldDescription>{description}</FieldDescription>}
+
+      {errorMessage && <FieldError>{errorMessage}</FieldError>}
     </Field>
   );
 }
