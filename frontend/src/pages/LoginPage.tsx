@@ -24,20 +24,23 @@ import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth/auth.store";
 import type { LoginInput } from "@/types";
 
-const FormFields = {
-  email: "email",
-  password: "password",
-} as const;
-
 export function LoginPage() {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<LoginInput>();
-
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<LoginInput> = async (data) => {
+  const onSubmit: SubmitHandler<LoginInput> = async (data: LoginInput) => {
     setIsLoading(true);
 
     try {
@@ -76,15 +79,15 @@ export function LoginPage() {
 
           <FieldGroup>
             <EmailField
-              id={FormFields.email}
-              required
-              {...register(FormFields.email)}
+              id="email"
+              errorMessage={errors.email?.message}
+              {...register("email", { required: "O e-mail é obrigatório" })}
             />
 
             <PasswordField
-              id={FormFields.password}
-              required
-              {...register(FormFields.password)}
+              id="password"
+              errorMessage={errors.password?.message}
+              {...register("password", { required: "A senha é obrigatória" })}
             />
           </FieldGroup>
 

@@ -21,19 +21,22 @@ import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/store/auth/auth.store";
 import type { RegisterInput } from "@/types";
 
-const FormFields = {
-  name: "name",
-  email: "email",
-  password: "password",
-} as const;
-
 export function RegisterPage() {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<RegisterInput>();
-
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
   const signup = useAuthStore((state) => state.signup);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterInput>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit: SubmitHandler<RegisterInput> = async (data) => {
     setIsLoading(true);
@@ -73,26 +76,27 @@ export function RegisterPage() {
 
           <FieldGroup>
             <TextField
-              id={FormFields.name}
+              id="name"
               label="Nome completo"
               type="name"
               placeholder="Seu nome completo"
               addon={<UserRound />}
-              {...register(FormFields.name)}
+              errorMessage={errors.name?.message}
+              {...register("name", { required: "O nome é obrigatório" })}
             />
 
             <EmailField
-              id={FormFields.email}
-              required
-              {...register(FormFields.email)}
+              id="email"
+              errorMessage={errors.email?.message}
+              {...register("email", { required: "O e-mail é obrigatório" })}
             />
 
             <PasswordField
               description="A senha deve ter no mínimo 8 caracteres"
-              id={FormFields.password}
+              id="password"
               minLength={8}
-              required
-              {...register(FormFields.password)}
+              errorMessage={errors.password?.message}
+              {...register("password", { required: "A senha é obrigatória" })}
             />
           </FieldGroup>
         </FieldSet>
