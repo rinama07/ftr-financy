@@ -24,7 +24,7 @@ export function CategoryCard({
   const Icon = CATEGORY_ICONS[category.icon_name] ?? DEFAULT_CATEGORY_ICON;
   const theme = CATEGORY_COLORS[category.color] ?? DEFAULT_CATEGORY_COLOR;
 
-  const transactionLabel = category.transactionsCount === 1 ? "item" : "itens";
+  const transactionLabel = category.transactionsCount == 1 ? "item" : "itens";
 
   return (
     <Card className="flex h-full flex-col p-6 transition-shadow hover:shadow-sm">
@@ -77,7 +77,7 @@ export function CategoryCard({
         </span>
 
         <span className="text-sm text-gray-500">
-          {category.transactionsCount} {transactionLabel}
+          {category.transactionsCount ?? 0} {transactionLabel}
         </span>
       </div>
     </Card>

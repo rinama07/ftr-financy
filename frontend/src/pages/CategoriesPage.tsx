@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -9,66 +9,107 @@ import { CategoryGridSkeleton } from "@/components/categories/CategoryGridSkelet
 import { CategoryHighlights } from "@/components/categories/CategoryHighlights";
 import { DeleteCategoryDialog } from "@/components/categories/DeleteCategoryDialog";
 import { Card } from "@/components/ui/card";
-import { DELETE_CATEGORY } from "@/lib/graphql/category/mutations";
-import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
-import type { Category } from "@/types";
 
-type CategoryDialogState = {
-  mode: "create" | "edit";
-  category?: Category;
-} | null;
+import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
+
+import { useCategoryActions } from "@/hooks/categories/useCategoryActions";
+
+import type {
+  Category,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from "@/types";
 
 export function CategoriesPage() {
   const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
 
-  const [deleteCategory, { loading: deleting, error: deleteError }] =
-    useMutation(DELETE_CATEGORY);
+  const {
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    saving,
+    saveError,
+    deleting,
+    deleteError,
+    resetErrors,
+  } = useCategoryActions();
 
-  const [categoryDialog, setCategoryDialog] =
-    useState<CategoryDialogState>(null);
-
-  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
+
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const categories = data?.getAllActiveCategories ?? [];
 
   const handleCreate = () => {
-    setCategoryDialog({
-      mode: "create",
-    });
+    resetErrors();
+    setSelectedCategory(null);
+    setCategoryDialogOpen(true);
   };
 
   const handleEdit = (category: Category) => {
-    setCategoryDialog({
-      mode: "edit",
-      category,
-    });
+    resetErrors();
+    setSelectedCategory(category);
+    setCategoryDialogOpen(true);
   };
 
   const handleDeleteRequest = (category: Category) => {
-    setCategoryToDelete(category);
+    resetErrors();
+    setSelectedCategory(category);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCategoryDialogChange = (open: boolean) => {
+    setCategoryDialogOpen(open);
+
+    if (!open) {
+      setSelectedCategory(null);
+    }
+  };
+
+  const handleDeleteDialogChange = (open: boolean) => {
+    if (deleting) {
+      return;
+    }
+
+    setDeleteDialogOpen(open);
+
+    if (!open) {
+      setSelectedCategory(null);
+    }
+  };
+
+  const handleCategorySubmit = async (values: CreateCategoryInput) => {
+    if (selectedCategory) {
+      const updateData: UpdateCategoryInput = {
+        id: selectedCategory.id,
+        ...values,
+      };
+
+      await updateCategory(updateData);
+    } else {
+      await createCategory(values);
+    }
+
+    setCategoryDialogOpen(false);
+    setSelectedCategory(null);
   };
 
   const handleDeleteConfirm = async () => {
-    if (!categoryToDelete) {
+    if (!selectedCategory) {
       return;
     }
 
     try {
-      await deleteCategory({
-        variables: {
-          data: {
-            deleteCategoryId: categoryToDelete.id,
-          },
-        },
-      });
+      await deleteCategory(selectedCategory.id);
 
-      await refetch();
-
-      setCategoryToDelete(null);
-    } catch (error) {
-      console.error(error);
+      setDeleteDialogOpen(false);
+      setSelectedCategory(null);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -141,26 +182,20 @@ export function CategoriesPage() {
       </div>
 
       <CategoryDialog
-        open={categoryDialog !== null}
-        mode={categoryDialog?.mode ?? "create"}
-        category={categoryDialog?.category ?? null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setCategoryDialog(null);
-          }
-        }}
+        open={categoryDialogOpen}
+        category={selectedCategory}
+        loading={saving}
+        errorMessage={saveError?.message}
+        onOpenChange={handleCategoryDialogChange}
+        onSubmit={handleCategorySubmit}
       />
 
       <DeleteCategoryDialog
-        open={categoryToDelete !== null}
-        category={categoryToDelete}
+        open={deleteDialogOpen}
+        category={selectedCategory}
         loading={deleting}
-        error={deleteError}
-        onOpenChange={(open) => {
-          if (!open && !deleting) {
-            setCategoryToDelete(null);
-          }
-        }}
+        errorMessage={deleteError?.message}
+        onOpenChange={handleDeleteDialogChange}
         onConfirm={handleDeleteConfirm}
       />
     </>

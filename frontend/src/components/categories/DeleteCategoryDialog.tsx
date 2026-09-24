@@ -10,23 +10,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
 import { Spinner } from "@/components/ui/spinner";
+
 import type { Category } from "@/types";
 
 type DeleteCategoryDialogProps = {
-  category?: Category;
+  category?: Category | null;
   open: boolean;
   loading: boolean;
-  error: Error | undefined;
+  errorMessage?: string;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
 };
 
 export function DeleteCategoryDialog({
   category,
   open,
   loading,
-  error,
+  errorMessage,
   onOpenChange,
   onConfirm,
 }: DeleteCategoryDialogProps) {
@@ -45,9 +47,9 @@ export function DeleteCategoryDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        {error && (
+        {errorMessage && (
           <p role="alert" className="text-sm text-destructive">
-            Não foi possível excluir a categoria. Tente novamente.
+            {errorMessage}
           </p>
         )}
 
@@ -58,7 +60,7 @@ export function DeleteCategoryDialog({
             disabled={loading}
             onClick={(event) => {
               event.preventDefault();
-              onConfirm();
+              void onConfirm();
             }}
           >
             {loading && <Spinner />}

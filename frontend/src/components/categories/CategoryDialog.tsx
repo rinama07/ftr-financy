@@ -5,41 +5,55 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Category } from "@/types";
+
+import type { Category, CreateCategoryInput } from "@/types";
+import { CategoryForm } from "./CategoryForm";
 
 type CategoryDialogProps = {
   open: boolean;
-  mode: "create" | "edit";
-  category?: Category;
+  category?: Category | null;
+  loading?: boolean;
+  errorMessage?: string;
   onOpenChange: (open: boolean) => void;
+  onSubmit: (values: CreateCategoryInput) => Promise<void>;
 };
 
 export function CategoryDialog({
   open,
-  mode,
   category,
+  loading = false,
+  errorMessage,
   onOpenChange,
+  onSubmit,
 }: CategoryDialogProps) {
-  const isEdit = mode === "edit";
+  const isEdit = category != null;
+  const title = isEdit ? "Editar categoria" : "Nova categoria";
+  const description = isEdit
+    ? `Editando "${category.title}"`
+    : "Organize suas transações com categorias";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {isEdit ? "Editar categoria" : "Nova categoria"}
-          </DialogTitle>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        if (!loading) {
+          onOpenChange(value);
+        }
+      }}
+    >
+      <DialogContent className="max-w-md p-6">
+        <DialogHeader className="pr-8">
+          <DialogTitle>{title}</DialogTitle>
 
-          <DialogDescription>
-            {isEdit
-              ? `Editando "${category?.title ?? ""}".`
-              : "Preencha os dados da nova categoria."}
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <div className="py-6 text-sm text-gray-500">
-          {/* Category form will be implemented here. */}
-        </div>
+        <CategoryForm
+          category={category}
+          loading={loading}
+          errorMessage={errorMessage}
+          onSubmit={onSubmit}
+        />
       </DialogContent>
     </Dialog>
   );
