@@ -3,19 +3,24 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
-import type { Category, CreateCategoryInput } from "@/types";
+import type { Category } from "@/types";
 import { SelectField } from "../forms/SelectField";
 import { TextField } from "../forms/TextField";
 import { CATEGORY_COLORS, CATEGORY_ICONS } from "./category.constants";
+
+export type CategoryFormValues = Pick<
+  Category,
+  "title" | "description" | "icon_name" | "color"
+>;
 
 type CategoryFormProps = {
   category?: Category | null;
   loading?: boolean;
   errorMessage?: string;
-  onSubmit: (values: CreateCategoryInput) => Promise<void>;
+  onSubmit: (values: CategoryFormValues) => Promise<void>;
 };
 
-const DEFAULT_FORM_VALUES: CreateCategoryInput = {
+const DEFAULT_FORM_VALUES: CategoryFormValues = {
   title: "",
   description: "",
   icon_name: "briefcase",
@@ -35,7 +40,7 @@ export function CategoryForm({
     reset,
     setValue,
     formState: { errors },
-  } = useForm<CreateCategoryInput>({
+  } = useForm<CategoryFormValues>({
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
@@ -64,7 +69,7 @@ export function CategoryForm({
     reset(DEFAULT_FORM_VALUES);
   }, [category, reset]);
 
-  const submit = async (values: CreateCategoryInput) => {
+  const submit = async (values: CategoryFormValues) => {
     await onSubmit(values);
   };
 
@@ -148,7 +153,7 @@ export function CategoryForm({
         </p>
       )}
 
-      <PrimaryButton type="submit" disabled={loading} className="mt-1 w-full">
+      <PrimaryButton type="submit" disabled={loading}>
         {loading ? "Salvando..." : "Salvar"}
       </PrimaryButton>
     </form>

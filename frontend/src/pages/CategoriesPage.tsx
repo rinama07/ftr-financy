@@ -4,21 +4,15 @@ import { useState } from "react";
 
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { CategoryDialog } from "@/components/categories/CategoryDialog";
+import type { CategoryFormValues } from "@/components/categories/CategoryForm";
 import { CategoryGrid } from "@/components/categories/CategoryGrid";
 import { CategoryGridSkeleton } from "@/components/categories/CategoryGridSkeleton";
 import { CategoryHighlights } from "@/components/categories/CategoryHighlights";
 import { DeleteCategoryDialog } from "@/components/categories/DeleteCategoryDialog";
 import { Card } from "@/components/ui/card";
-
-import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
-
 import { useCategoryActions } from "@/hooks/categories/useCategoryActions";
-
-import type {
-  Category,
-  CreateCategoryInput,
-  UpdateCategoryInput,
-} from "@/types";
+import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
+import type { Category, UpdateCategoryInput } from "@/types";
 
 export function CategoriesPage() {
   const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
@@ -82,16 +76,24 @@ export function CategoriesPage() {
     }
   };
 
-  const handleCategorySubmit = async (values: CreateCategoryInput) => {
+  const handleCategorySubmit = async (values: CategoryFormValues) => {
     if (selectedCategory) {
       const updateData: UpdateCategoryInput = {
         id: selectedCategory.id,
-        ...values,
+        title: values.title,
+        description: values.description ?? "",
+        icon_name: values.icon_name,
+        color: values.color,
       };
 
       await updateCategory(updateData);
     } else {
-      await createCategory(values);
+      await createCategory({
+        title: values.title,
+        description: values.description ?? "",
+        icon_name: values.icon_name,
+        color: values.color,
+      });
     }
 
     setCategoryDialogOpen(false);
@@ -128,7 +130,7 @@ export function CategoriesPage() {
           <PrimaryButton
             type="button"
             size="sm"
-            className="w-full sm:w-auto"
+            className="w-auto"
             onClick={handleCreate}
           >
             <Plus />

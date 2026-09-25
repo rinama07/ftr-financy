@@ -6,8 +6,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import type { Category, CreateCategoryInput } from "@/types";
-import { CategoryForm } from "./CategoryForm";
+import type { Category } from "@/types";
+import { CategoryForm, type CategoryFormValues } from "./CategoryForm";
 
 type CategoryDialogProps = {
   open: boolean;
@@ -15,7 +15,7 @@ type CategoryDialogProps = {
   loading?: boolean;
   errorMessage?: string;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: CreateCategoryInput) => Promise<void>;
+  onSubmit: (values: CategoryFormValues) => Promise<void>;
 };
 
 export function CategoryDialog({
