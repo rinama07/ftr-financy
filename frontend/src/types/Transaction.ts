@@ -9,7 +9,7 @@ export interface Transaction {
   type: TransactionType;
   description: string;
   date: string;
-  amount: number;
+  amount?: number;
   createdAt?: string;
   updatedAt?: string;
   categoryId: string;
