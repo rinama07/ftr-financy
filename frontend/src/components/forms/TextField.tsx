@@ -12,7 +12,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-type TextFieldProps = ComponentProps<typeof InputGroupInput> & {
+export type TextFieldProps = ComponentProps<typeof InputGroupInput> & {
   addon?: React.ReactNode;
   description?: string;
   errorMessage?: string;
