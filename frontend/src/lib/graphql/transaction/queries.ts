@@ -21,6 +21,7 @@ export const GET_TRANSACTIONS_BY_FILTER: TypedDocumentNode<
         date
         type
         amount
+        categoryId
         category {
           id
           title
