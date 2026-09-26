@@ -64,13 +64,15 @@ export function useCategoryActions() {
   };
 
   return {
-    deleteError,
-    deleting,
-    saveError: createError ?? updateError,
-    saving: creating || updating,
     createCategory,
     deleteCategory,
     resetErrors,
     updateCategory,
+
+    deleteError,
+    deleting,
+
+    saveError: createError ?? updateError,
+    saving: creating || updating,
   };
 }

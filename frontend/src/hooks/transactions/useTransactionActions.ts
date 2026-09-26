@@ -54,14 +54,14 @@ export function useTransactionActions() {
 
   return {
     createTransaction,
-    updateTransaction,
     deleteTransaction,
+    updateTransaction,
 
-    saving: creating || updating,
-    saveError: createError ?? updateError,
-
-    deleting,
     deleteError,
+    deleting,
+
+    saveError: createError ?? updateError,
+    saving: creating || updating,
 
     resetErrors,
   };
