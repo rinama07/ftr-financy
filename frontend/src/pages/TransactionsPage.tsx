@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client/react";
 import { useCallback, useMemo, useState } from "react";
 
 import { CreateButton } from "@/components/buttons/CreateButton";
@@ -16,17 +15,19 @@ import { TransactionPagination } from "@/components/transactions/TransactionPagi
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { TransactionTableSkeleton } from "@/components/transactions/TransactionTableSkeleton";
 import { Card } from "@/components/ui/card";
+import { useCategories } from "@/hooks/categories/useCategories";
 import { useTransactionActions } from "@/hooks/transactions/useTransactionActions";
-import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
-import { GET_TRANSACTIONS_BY_FILTER } from "@/lib/graphql/transaction/queries";
+import { useTransactions } from "@/hooks/transactions/useTransactions";
 import type { Transaction } from "@/types/Transaction";
 
 const PAGE_SIZE = 10;
 
 export function TransactionsPage() {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
   const [filters, setFilters] = useState<TransactionFilterState>({
     description: "",
     type: "all",
@@ -34,31 +35,27 @@ export function TransactionsPage() {
     period: getCurrentPeriod(),
   });
 
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
-
   const transactionFilter = useMemo(
     () => buildTransactionFilter(filters),
     [filters],
   );
 
-  const { data, loading, error, refetch } = useQuery(
-    GET_TRANSACTIONS_BY_FILTER,
-    {
-      variables: {
-        filter: transactionFilter,
-        page,
-        pageSize: PAGE_SIZE,
-      },
-      notifyOnNetworkStatusChange: true,
-    },
-  );
+  const {
+    data: { transactions, total, totalPages },
+    loading,
+    error,
+    refetch,
+  } = useTransactions({
+    filter: transactionFilter,
+    page,
+    pageSize: PAGE_SIZE,
+  });
 
   const {
-    data: categoryData,
+    categories,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useQuery(GET_CATEGORIES);
+  } = useCategories();
 
   const {
     createTransaction,
@@ -70,13 +67,6 @@ export function TransactionsPage() {
     deleteError,
     resetErrors,
   } = useTransactionActions();
-
-  const transactionData = data?.getTransactionsByFilter;
-  const transactions = transactionData?.transactions ?? [];
-  const categories = categoryData?.getAllActiveCategories ?? [];
-  const totalItems = transactionData?.total ?? 0;
-  const totalPages = transactionData?.totalPages ?? 0;
-  const currentPage = totalPages === 0 ? 1 : Math.min(page, totalPages);
 
   const handleFilterChange = useCallback(
     (changes: Partial<TransactionFilterState>) => {
@@ -183,6 +173,7 @@ export function TransactionsPage() {
   };
 
   const createDisabled = categoriesLoading || !categories.length;
+  const currentPage = totalPages === 0 ? 1 : Math.min(page, totalPages);
 
   return (
     <>
@@ -254,7 +245,7 @@ export function TransactionsPage() {
             <TransactionPagination
               page={currentPage}
               pageSize={PAGE_SIZE}
-              totalItems={totalItems}
+              totalItems={total}
               totalPages={totalPages}
               onPageChange={setPage}
             />

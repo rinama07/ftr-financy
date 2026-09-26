@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client/react";
 import { useState } from "react";
 
 import { CreateButton } from "@/components/buttons/CreateButton";
@@ -10,12 +9,12 @@ import { CategoryGridSkeleton } from "@/components/categories/CategoryGridSkelet
 import { CategoryHighlights } from "@/components/categories/CategoryHighlights";
 import { DeleteCategoryDialog } from "@/components/categories/DeleteCategoryDialog";
 import { Card } from "@/components/ui/card";
+import { useCategories } from "@/hooks/categories/useCategories";
 import { useCategoryActions } from "@/hooks/categories/useCategoryActions";
-import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
 import type { Category, UpdateCategoryInput } from "@/types";
 
 export function CategoriesPage() {
-  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
+  const { categories, loading, error, refetch } = useCategories();
 
   const {
     createCategory,
@@ -28,15 +27,11 @@ export function CategoriesPage() {
     resetErrors,
   } = useCategoryActions();
 
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
-
-  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-  const categories = data?.getAllActiveCategories ?? [];
 
   const handleCreate = () => {
     resetErrors();
