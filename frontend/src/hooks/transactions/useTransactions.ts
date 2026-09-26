@@ -11,6 +11,7 @@ export function useTransactions({
   const { data, loading, error, refetch } = useQuery(
     GET_TRANSACTIONS_BY_FILTER,
     {
+      fetchPolicy: "cache-and-network",
       variables: {
         filter,
         page,
