@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
-import { Plus } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
+import { CreateButton } from "@/components/buttons/CreateButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { DeleteTransactionDialog } from "@/components/transactions/DeleteTransactionDialog";
 import {
@@ -24,6 +24,9 @@ import type { Transaction } from "@/types/Transaction";
 const PAGE_SIZE = 10;
 
 export function TransactionsPage() {
+  const [page, setPage] = useState(1);
+  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [filters, setFilters] = useState<TransactionFilterState>({
     description: "",
     type: "all",
@@ -31,14 +34,8 @@ export function TransactionsPage() {
     period: getCurrentPeriod(),
   });
 
-  const [page, setPage] = useState(1);
-
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
-
-  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const transactionFilter = useMemo(
     () => buildTransactionFilter(filters),
@@ -74,7 +71,6 @@ export function TransactionsPage() {
     resetErrors,
   } = useTransactionActions();
 
-  console.log({ data });
   const transactionData = data?.getTransactionsByFilter;
   const transactions = transactionData?.transactions ?? [];
   const categories = categoryData?.getAllActiveCategories ?? [];
@@ -198,15 +194,11 @@ export function TransactionsPage() {
             </p>
           </div>
 
-          <PrimaryButton
-            type="button"
-            size="sm"
-            className="w-auto"
+          <CreateButton
+            disabled={categoriesLoading || !categories.length}
+            label="Nova transação"
             onClick={handleCreate}
-          >
-            <Plus />
-            <span>Nova transação</span>
-          </PrimaryButton>
+          />
         </header>
 
         <TransactionFilters
@@ -240,11 +232,6 @@ export function TransactionsPage() {
             <p className="max-w-md text-sm text-gray-600">
               Ajuste os filtros ou crie uma nova transação.
             </p>
-
-            <PrimaryButton type="button" size="sm" onClick={handleCreate}>
-              <Plus />
-              Nova transação
-            </PrimaryButton>
           </Card>
         ) : (
           <Card className="overflow-hidden">
