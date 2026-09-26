@@ -1,7 +1,9 @@
+import type { Category } from "@/types";
 import type {
   GetTransactionsFilterInput,
   TransactionTypeFilter,
 } from "@/types/Transaction";
+import type { DropdownOption } from "../forms/DropdownField";
 
 export interface TransactionFilterState {
   description: string;
@@ -16,7 +18,35 @@ export function getCurrentPeriod(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }
 
-export function getMonthOptions(count = 24) {
+export function getTypeOptions(): DropdownOption<TransactionTypeFilter>[] {
+  return [
+    {
+      label: "Todos",
+      value: "all",
+    },
+    {
+      label: "Saídas",
+      value: "expense",
+    },
+    {
+      label: "Entradas",
+      value: "income",
+    },
+  ];
+}
+
+export function getCategoriesOptions(
+  categories: Category[],
+): DropdownOption<string>[] {
+  const options = categories.map((category) => ({
+    label: category.title,
+    value: category.id,
+  }));
+
+  return [{ label: "Todas", value: "all" }, ...options];
+}
+
+export function getMonthOptions(count = 24): DropdownOption<string>[] {
   const now = new Date();
 
   return Array.from({ length: count }, (_, index) => {
