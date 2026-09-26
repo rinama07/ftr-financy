@@ -101,6 +101,17 @@ export class CategoryService {
     data: CreateCategoryInput,
     userId: string,
   ): Promise<Category> {
+    const existingCategory = await prismaClient.category.findFirst({
+      where: {
+        userId,
+        title: data.title,
+      },
+    });
+
+    if (existingCategory) {
+      throw new Error("Category title already in use");
+    }
+
     return await prismaClient.category.create({
       data: {
         title: data.title,

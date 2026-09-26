@@ -182,6 +182,8 @@ export function TransactionsPage() {
     }
   };
 
+  const createDisabled = categoriesLoading || !categories.length;
+
   return (
     <>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
@@ -194,11 +196,19 @@ export function TransactionsPage() {
             </p>
           </div>
 
-          <CreateButton
-            disabled={categoriesLoading || !categories.length}
-            label="Nova transação"
-            onClick={handleCreate}
-          />
+          <div className="flex flex-col">
+            <CreateButton
+              disabled={createDisabled}
+              label="Nova transação"
+              onClick={handleCreate}
+            />
+
+            {createDisabled && (
+              <p className="text-xs">
+                Crie categorias antes de incluir uma transação!
+              </p>
+            )}
+          </div>
         </header>
 
         <TransactionFilters

@@ -24,7 +24,7 @@ model User {
 model Category {
   id           String        @id @default(uuid())
   isActive     Boolean       @default(true)
-  title        String        @unique
+  title        String
   description  String
   icon_name    String
   color        String
