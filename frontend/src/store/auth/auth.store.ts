@@ -64,7 +64,6 @@ export const useAuthStore = create<AuthState>()(
       updateUser: async (name: string) => {
         try {
           const user = await authService.updateUser(name);
-          console.log({ user });
 
           if (!user) {
             return false;

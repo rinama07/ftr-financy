@@ -94,7 +94,10 @@ export class CategoryService {
       throw new Error("Categories not found!");
     }
 
-    return categories;
+    return categories.map((category) => ({
+      ...category,
+      transactionsCount: category._count.transactions,
+    }));
   }
 
   async createCategory(

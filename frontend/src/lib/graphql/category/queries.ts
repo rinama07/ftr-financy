@@ -10,6 +10,7 @@ export const GET_CATEGORIES: TypedDocumentNode<GetActiveCategoriesResponse> = gq
       description
       icon_name
       color
+      transactionsCount
     }
   }
 `;
