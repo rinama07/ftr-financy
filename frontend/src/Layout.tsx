@@ -46,7 +46,7 @@ export function ProtectedPageLayout({ children }: PageLayoutProps) {
 
   return (
     <PageLayout>
-      <header className="flex flex-row items-center justify-center sm:justify-between gap-8 py-4 px-12">
+      <header className="flex flex-row items-center justify-center sm:justify-between gap-8 py-4 px-12 bg-white">
         <Logo className="h-6" />
 
         <nav className="flex flex-row gap-5">

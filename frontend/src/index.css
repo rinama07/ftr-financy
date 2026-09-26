@@ -42,39 +42,39 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  --color-brand-base: var(--color-brand-base);
-  --color-brand-dark: var(--color-brand-dark);
-  --color-gray-100: var(--color-gray-100);
-  --color-gray-200: var(--color-gray-200);
-  --color-gray-300: var(--color-gray-300);
-  --color-gray-400: var(--color-gray-400);
-  --color-gray-500: var(--color-gray-500);
-  --color-gray-600: var(--color-gray-600);
-  --color-gray-700: var(--color-gray-700);
-  --color-gray-800: var(--color-gray-800);
-  --color-blue-dark: var(--color-blue-dark);
-  --color-blue-base: var(--color-blue-base);
-  --color-blue-light: var(--color-blue-light);
-  --color-pink-dark: var(--color-pink-dark);
-  --color-pink-base: var(--color-pink-base);
-  --color-pink-light: var(--color-pink-light);
-  --color-orange-dark: var(--color-orange-dark);
-  --color-orange-base: var(--color-orange-base);
-  --color-orange-light: var(--color-orange-light);
-  --color-green-dark: var(--color-green-dark);
-  --color-green-base: var(--color-green-base);
-  --color-green-light: var(--color-green-light);
-  --color-purple-dark: var(--color-purple-dark);
-  --color-purple-base: var(--color-purple-base);
-  --color-purple-light: var(--color-purple-light);
-  --color-red-dark: var(--color-red-dark);
-  --color-red-base: var(--color-red-base);
-  --color-red-light: var(--color-red-light);
-  --color-yellow-dark: var(--color-yellow-dark);
-  --color-yellow-base: var(--color-yellow-base);
-  --color-yellow-light: var(--color-yellow-light);
-  --color-danger: var(--color-danger);
-  --color-success: var(--color-success);
+  --color-brand-base: var(--brand-base);
+  --color-brand-dark: var(--brand-dark);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-blue-dark: var(--blue-dark);
+  --color-blue-base: var(--blue-base);
+  --color-blue-light: var(--blue-light);
+  --color-pink-dark: var(--pink-dark);
+  --color-pink-base: var(--pink-base);
+  --color-pink-light: var(--pink-light);
+  --color-orange-dark: var(--orange-dark);
+  --color-orange-base: var(--orange-base);
+  --color-orange-light: var(--orange-light);
+  --color-green-dark: var(--green-dark);
+  --color-green-base: var(--green-base);
+  --color-green-light: var(--green-light);
+  --color-purple-dark: var(--purple-dark);
+  --color-purple-base: var(--purple-base);
+  --color-purple-light: var(--purple-light);
+  --color-red-dark: var(--red-dark);
+  --color-red-base: var(--red-base);
+  --color-red-light: var(--red-light);
+  --color-yellow-dark: var(--yellow-dark);
+  --color-yellow-base: var(--yellow-base);
+  --color-yellow-light: var(--yellow-light);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -86,20 +86,20 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: white;
-  --card-foreground: var(--color-gray-700);
+  --card-foreground: var(--gray-700);
   --popover: white;
   --popover-foreground: oklch(0.145 0 0);
-  --primary: var(--color-brand-base);
+  --primary: var(--brand-base);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: var(--color-gray-400);
+  --muted-foreground: var(--gray-400);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: var(--color-danger);
-  --border: var(--color-gray-300);
-  --input: var(--color-gray-300);
+  --destructive: var(--danger);
+  --border: var(--gray-300);
+  --input: var(--gray-300);
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
@@ -111,39 +111,39 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  --color-brand-base: #1f6f43;
-  --color-brand-dark: #124b2b;
-  --color-gray-100: #f8f9fa;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #111827;
-  --color-blue-dark: #1d4ed8;
-  --color-blue-base: #2563eb;
-  --color-blue-light: #dbeafe;
-  --color-pink-dark: #be185d;
-  --color-pink-base: #db2777;
-  --color-pink-light: #fce7f3;
-  --color-orange-dark: #c2410c;
-  --color-orange-base: #ea580c;
-  --color-orange-light: #ffedd5;
-  --color-green-dark: #15803d;
-  --color-green-base: #16a34a;
-  --color-green-light: #e0fae9;
-  --color-purple-dark: #7e22ce;
-  --color-purple-base: #9333ea;
-  --color-purple-light: #f3e8ff;
-  --color-red-dark: #b91c1c;
-  --color-red-base: #dc2626;
-  --color-red-light: #fee2e2;
-  --color-yellow-dark: #a16207;
-  --color-yellow-base: #ca8a04;
-  --color-yellow-light: #f7f3ca;
-  --color-danger: #ef4444;
-  --color-success: #19ad70;
+  --brand-base: #1f6f43;
+  --brand-dark: #124b2b;
+  --gray-100: #f8f9fa;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #111827;
+  --blue-dark: #1d4ed8;
+  --blue-base: #2563eb;
+  --blue-light: #dbeafe;
+  --pink-dark: #be185d;
+  --pink-base: #db2777;
+  --pink-light: #fce7f3;
+  --orange-dark: #c2410c;
+  --orange-base: #ea580c;
+  --orange-light: #ffedd5;
+  --green-dark: #15803d;
+  --green-base: #16a34a;
+  --green-light: #e0fae9;
+  --purple-dark: #7e22ce;
+  --purple-base: #9333ea;
+  --purple-light: #f3e8ff;
+  --red-dark: #b91c1c;
+  --red-base: #dc2626;
+  --red-light: #fee2e2;
+  --yellow-dark: #a16207;
+  --yellow-base: #ca8a04;
+  --yellow-light: #f7f3ca;
+  --danger: #ef4444;
+  --success: #19ad70;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -189,9 +189,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html,
   span,
   label,
@@ -199,10 +201,12 @@
   button,
   a {
     @apply font-sans;
-    font-weight: regular;
+
+    font-weight: 400;
     line-height: 1.125rem;
     letter-spacing: 0;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
