@@ -9,7 +9,10 @@ export function OutlineButton({ className, ...props }: OutlineButtonProps) {
   return (
     <Button
       variant="outline"
-      className={clsx("w-full h-auto py-3 px-4", className)}
+      className={clsx(
+        "w-full h-auto text-gray-700 text-base font-medium py-3 px-4",
+        className,
+      )}
       {...props}
     />
   );
