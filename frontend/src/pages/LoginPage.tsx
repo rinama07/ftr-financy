@@ -69,12 +69,14 @@ export function LoginPage() {
     <Card className="w-full max-w-md p-8 my-8">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <FieldSet className="p-0 m-0">
-          <FieldLegend className="w-full text-center text-gray-800">
-            Fazer login
+          <FieldLegend className="w-full text-center">
+            <span className="font-bold text-xl text-gray-800">Fazer login</span>
           </FieldLegend>
 
-          <FieldDescription className="w-full text-center text-gray-600">
-            Entre na sua conta para continuar
+          <FieldDescription className="w-full text-center">
+            <span className="text-base font-normal text-gray-600">
+              Entre na sua conta para continuar
+            </span>
           </FieldDescription>
 
           <FieldGroup>
