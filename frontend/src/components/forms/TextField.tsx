@@ -21,8 +21,8 @@ export type TextFieldProps = ComponentProps<typeof InputGroupInput> & {
 
 export function TextField({
   addon,
-  className,
   description,
+
   errorMessage,
   id,
   label,
@@ -36,7 +36,7 @@ export function TextField({
       <InputGroup>
         {addon && <InputGroupAddon>{addon}</InputGroupAddon>}
 
-        <InputGroupInput {...props} id={id} type={type} className={className} />
+        <InputGroupInput {...props} id={id} type={type} />
       </InputGroup>
 
       {description && <FieldDescription>{description}</FieldDescription>}
