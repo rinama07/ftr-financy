@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { CreateButton } from "@/components/buttons/CreateButton";
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
 import { CategoryDialog } from "@/components/categories/CategoryDialog";
 import type { CategoryFormValues } from "@/components/categories/CategoryForm";
@@ -127,15 +127,7 @@ export function CategoriesPage() {
             </p>
           </div>
 
-          <PrimaryButton
-            type="button"
-            size="sm"
-            className="w-auto"
-            onClick={handleCreate}
-          >
-            <Plus />
-            <span>Nova categoria</span>
-          </PrimaryButton>
+          <CreateButton onClick={handleCreate} label="Nova categoria" />
         </header>
 
         {error ? (
@@ -164,11 +156,6 @@ export function CategoriesPage() {
               Crie sua primeira categoria para começar a organizar suas
               transações.
             </p>
-
-            <PrimaryButton type="button" size="sm" onClick={handleCreate}>
-              <Plus />
-              Nova categoria
-            </PrimaryButton>
           </Card>
         ) : (
           <>
