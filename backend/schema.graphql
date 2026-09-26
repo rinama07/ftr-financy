@@ -80,7 +80,7 @@ type Query {
   getCategory(id: String!): CategoryModel!
   getDashboardData: DashboardModel!
   getTransaction(id: String!): TransactionModel!
-  getTransactionsByFilter(filter: TransactionFilterInput!): [TransactionModel!]!
+  getTransactionsByFilter(filter: TransactionFilterInput!, page: Int! = 1, pageSize: Int! = 10): TransactionPaginationModel!
   getUser(id: String!): UserModel!
 }
 
@@ -116,6 +116,14 @@ type TransactionModel {
   updatedAt: DateTimeISO!
   user: UserModel
   userId: String!
+}
+
+type TransactionPaginationModel {
+  page: Int!
+  pageSize: Int!
+  total: Int!
+  totalPages: Int!
+  transactions: [TransactionModel!]!
 }
 
 input UpdateCategoryInput {

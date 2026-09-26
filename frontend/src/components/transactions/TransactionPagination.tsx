@@ -6,6 +6,7 @@ type TransactionPaginationProps = {
   page: number;
   pageSize: number;
   totalItems: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
 };
 
@@ -13,10 +14,9 @@ export function TransactionPagination({
   page,
   pageSize,
   totalItems,
+  totalPages,
   onPageChange,
 }: TransactionPaginationProps) {
-  const totalPages = Math.ceil(totalItems / pageSize);
-
   if (totalItems === 0) {
     return (
       <div className="flex items-center justify-between border-t px-6 py-4 text-sm text-gray-600">

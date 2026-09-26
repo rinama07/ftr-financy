@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -17,7 +18,10 @@ import {
 } from "../dtos/input/transaction.input";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 import { CategoryModel } from "../model/category.model";
-import { TransactionModel } from "../model/transaction.model.js";
+import {
+  TransactionModel,
+  TransactionPaginationModel,
+} from "../model/transaction.model.js";
 import { UserModel } from "../model/user.model";
 import { CategoryService } from "../services/category.service";
 import { TransactionService } from "../services/transaction.service";
@@ -69,14 +73,23 @@ export class TransactionResolver {
     return this.transactionService.deleteTransaction(id, user.id);
   }
 
-  @Query(() => [TransactionModel])
+  @Query(() => TransactionPaginationModel)
   async getTransactionsByFilter(
-    @Arg("filter", () => TransactionFilterInput) filter: TransactionFilterInput,
+    @Arg("filter", () => TransactionFilterInput)
+    filter: TransactionFilterInput,
+    @Arg("page", () => Int, { defaultValue: 1 })
+    page: number,
+    @Arg("pageSize", () => Int, { defaultValue: 10 })
+    pageSize: number,
     @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.getTransactionByFilter(filter, user.id);
+  ): Promise<TransactionPaginationModel> {
+    return this.transactionService.getTransactionByFilter(
+      filter,
+      user.id,
+      page,
+      pageSize,
+    );
   }
-
   // Resolvers
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel): Promise<UserModel> {

@@ -9,7 +9,10 @@ import type {
   TransactionFilterInput,
   UpdateTransactionInput,
 } from "../dtos/input/transaction.input";
-import type { TransactionSummaryModel } from "../model/transaction.model.js";
+import type {
+  TransactionPaginationModel,
+  TransactionSummaryModel,
+} from "../model/transaction.model.js";
 
 export class TransactionService {
   async getTransaction(id: string, userId: string): Promise<Transaction> {
@@ -101,8 +104,12 @@ export class TransactionService {
   async getTransactionByFilter(
     filter: TransactionFilterInput,
     userId: string,
-  ): Promise<Transaction[]> {
-    const where: Prisma.TransactionWhereInput = { userId };
+    page = 1,
+    pageSize = 10,
+  ): Promise<TransactionPaginationModel> {
+    const where: Prisma.TransactionWhereInput = {
+      userId,
+    };
 
     if (filter.description) {
       where.description = {
@@ -125,15 +132,33 @@ export class TransactionService {
       };
     }
 
-    const transactions = await prismaClient.transaction.findMany({
-      where,
-    });
+    const skip = (page - 1) * pageSize;
 
-    if (!transactions) {
-      throw new Error("Transactions not found!");
-    }
+    const [transactions, total] = await Promise.all([
+      prismaClient.transaction.findMany({
+        where,
+        orderBy: {
+          date: "desc",
+        },
+        skip,
+        take: pageSize,
+        include: {
+          category: true,
+        },
+      }),
 
-    return transactions;
+      prismaClient.transaction.count({
+        where,
+      }),
+    ]);
+
+    return {
+      transactions,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   async getTotalFinancialSummary(

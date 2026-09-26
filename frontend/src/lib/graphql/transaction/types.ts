@@ -31,6 +31,8 @@ export interface DeleteTransactionResponse {
 
 export type GetTransactionsVariables = {
   filter: GetTransactionsFilterInput;
+  page: number;
+  pageSize: number;
 };
 
 export type CreateTransactionVariables = {
@@ -46,5 +48,11 @@ export type DeleteTransactionVariables = {
 };
 
 export interface GetTransactionsResponse {
-  getTransactionsByFilter: Transaction[];
+  getTransactionsByFilter: {
+    transactions: Transaction[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
 }

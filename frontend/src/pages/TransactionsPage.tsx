@@ -18,7 +18,7 @@ import { TransactionTableSkeleton } from "@/components/transactions/TransactionT
 import { Card } from "@/components/ui/card";
 import { useTransactionActions } from "@/hooks/transactions/useTransactionActions";
 import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
-import { GET_TRANSACTIONS } from "@/lib/graphql/transaction/queries";
+import { GET_TRANSACTIONS_BY_FILTER } from "@/lib/graphql/transaction/queries";
 import type { Transaction } from "@/types/Transaction";
 
 const PAGE_SIZE = 10;
@@ -45,12 +45,17 @@ export function TransactionsPage() {
     [filters],
   );
 
-  const { data, loading, error, refetch } = useQuery(GET_TRANSACTIONS, {
-    variables: {
-      filter: transactionFilter,
+  const { data, loading, error, refetch } = useQuery(
+    GET_TRANSACTIONS_BY_FILTER,
+    {
+      variables: {
+        filter: transactionFilter,
+        page,
+        pageSize: PAGE_SIZE,
+      },
+      notifyOnNetworkStatusChange: true,
     },
-    notifyOnNetworkStatusChange: true,
-  });
+  );
 
   const {
     data: categoryData,
@@ -69,20 +74,13 @@ export function TransactionsPage() {
     resetErrors,
   } = useTransactionActions();
 
-  const transactions = data?.getTransactionsByFilter ?? [];
-
-  console.info({ transactions });
-
+  console.log({ data });
+  const transactionData = data?.getTransactionsByFilter;
+  const transactions = transactionData?.transactions ?? [];
   const categories = categoryData?.getAllActiveCategories ?? [];
-
-  const totalPages = Math.ceil(transactions.length / PAGE_SIZE);
-
+  const totalItems = transactionData?.total ?? 0;
+  const totalPages = transactionData?.totalPages ?? 0;
   const currentPage = totalPages === 0 ? 1 : Math.min(page, totalPages);
-
-  const visibleTransactions = transactions.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
 
   const handleFilterChange = useCallback(
     (changes: Partial<TransactionFilterState>) => {
@@ -142,36 +140,32 @@ export function TransactionsPage() {
   };
 
   const handleTransactionSubmit = async (values: TransactionFormValues) => {
-    console.log({ values });
-
     try {
       const amount = (values.amount ?? "").replace(",", ".").trim();
+
+      const transactionData = {
+        type: values.type,
+        date: values.date,
+        description: values.description.trim(),
+        amount: Number(amount),
+        categoryId: values.categoryId,
+      };
 
       if (selectedTransaction) {
         await updateTransaction({
           id: selectedTransaction.id,
-          type: values.type,
-          date: values.date,
-          description: values.description,
-          amount: Number(amount),
-          categoryId: values.categoryId,
+          ...transactionData,
         });
       } else {
-        await createTransaction({
-          type: values.type,
-          date: values.date,
-          description: values.description,
-          amount: Number(amount),
-          categoryId: values.categoryId,
-        });
+        await createTransaction(transactionData);
       }
 
       await refetch();
 
       setTransactionDialogOpen(false);
       setSelectedTransaction(null);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -187,8 +181,8 @@ export function TransactionsPage() {
 
       setDeleteDialogOpen(false);
       setSelectedTransaction(null);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -196,7 +190,7 @@ export function TransactionsPage() {
     <>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+          <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
 
             <p className="mt-1 text-gray-600">
@@ -255,7 +249,7 @@ export function TransactionsPage() {
         ) : (
           <Card className="overflow-hidden">
             <TransactionTable
-              transactions={visibleTransactions}
+              transactions={transactions}
               onEdit={handleEdit}
               onDelete={handleDeleteRequest}
             />
@@ -263,7 +257,8 @@ export function TransactionsPage() {
             <TransactionPagination
               page={currentPage}
               pageSize={PAGE_SIZE}
-              totalItems={transactions.length}
+              totalItems={totalItems}
+              totalPages={totalPages}
               onPageChange={setPage}
             />
           </Card>
