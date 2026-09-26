@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -8,15 +9,19 @@ import {
   UseMiddleware,
 } from "type-graphql";
 
-import { TransactionType, type User } from "../../generated/prisma/client";
+import { type User } from "../../generated/prisma/client";
 import { getGraphqlUser } from "../decorators/user.decorator";
 import {
   CreateTransactionInput,
+  TransactionFilterInput,
   UpdateTransactionInput,
 } from "../dtos/input/transaction.input";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 import { CategoryModel } from "../model/category.model";
-import { TransactionModel } from "../model/transaction.model.js";
+import {
+  TransactionModel,
+  TransactionPaginationModel,
+} from "../model/transaction.model.js";
 import { UserModel } from "../model/user.model";
 import { CategoryService } from "../services/category.service";
 import { TransactionService } from "../services/transaction.service";
@@ -34,14 +39,14 @@ export class TransactionResolver {
     @Arg("id", () => String) id: string,
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel> {
-    return this.transactionService.findTransaction(id, user.id);
+    return this.transactionService.getTransaction(id, user.id);
   }
 
   @Query(() => [TransactionModel])
   async getAllTransactions(
     @getGraphqlUser() user: User,
   ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionList(user.id);
+    return this.transactionService.getTransactions(user.id);
   }
 
   @Mutation(() => TransactionModel)
@@ -68,60 +73,34 @@ export class TransactionResolver {
     return this.transactionService.deleteTransaction(id, user.id);
   }
 
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByDescription(
-    @Arg("description", () => String) description: string,
+  @Query(() => TransactionPaginationModel)
+  async getTransactionsByFilter(
+    @Arg("filter", () => TransactionFilterInput)
+    filter: TransactionFilterInput,
+    @Arg("page", () => Int, { defaultValue: 1 })
+    page: number,
+    @Arg("pageSize", () => Int, { defaultValue: 10 })
+    pageSize: number,
     @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByDescription(
-      description,
+  ): Promise<TransactionPaginationModel> {
+    return this.transactionService.getTransactionByFilter(
+      filter,
       user.id,
+      page,
+      pageSize,
     );
   }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByType(
-    @Arg("type", () => String) type: TransactionType,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByType(type, user.id);
-  }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByCategory(
-    @Arg("categoryId", () => String) categoryId: string,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByCategory(
-      categoryId,
-      user.id,
-    );
-  }
-
-  @Query(() => [TransactionModel])
-  async getAllTransactionsByDateRange(
-    @Arg("startDate", () => Date) startDate: Date,
-    @Arg("endDate", () => Date) endDate: Date,
-    @getGraphqlUser() user: User,
-  ): Promise<TransactionModel[]> {
-    return this.transactionService.findTransactionByDateRange(
-      startDate,
-      endDate,
-      user.id,
-    );
-  }
-
   // Resolvers
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel): Promise<UserModel> {
-    return this.userService.findUser(transaction.userId);
+    return this.userService.getUser(transaction.userId);
   }
 
   @FieldResolver(() => CategoryModel)
   async category(
     @Root() transaction: TransactionModel,
   ): Promise<CategoryModel> {
-    return this.categoryService.findCategory(
+    return this.categoryService.getCategory(
       transaction.categoryId,
       transaction.userId,
     );

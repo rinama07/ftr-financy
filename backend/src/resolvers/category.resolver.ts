@@ -31,14 +31,14 @@ export class CategoryResolver {
     @Arg("id", () => String) id: string,
     @getGraphqlUser() user: User,
   ): Promise<CategoryModel> {
-    return this.categoryService.findCategory(id, user.id);
+    return this.categoryService.getCategory(id, user.id);
   }
 
   @Query(() => [CategoryModel])
-  async getAllCategories(
+  async getAllActiveCategories(
     @getGraphqlUser() user: User,
   ): Promise<CategoryModel[]> {
-    return this.categoryService.findCategoryList(user.id);
+    return this.categoryService.getAllActiveCategories(user.id);
   }
 
   @Mutation(() => CategoryModel)
@@ -67,6 +67,6 @@ export class CategoryResolver {
 
   @FieldResolver(() => UserModel)
   async user(@Root() category: CategoryModel): Promise<UserModel> {
-    return this.userService.findUser(category.userId);
+    return this.userService.getUser(category.userId);
   }
 }

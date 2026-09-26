@@ -1,15 +1,21 @@
-import type {
-  Transaction,
+import {
   TransactionType,
+  type Prisma,
+  type Transaction,
 } from "../../generated/prisma/client.js";
 import { prismaClient } from "../../prisma/prisma.js";
 import type {
   CreateTransactionInput,
+  TransactionFilterInput,
   UpdateTransactionInput,
 } from "../dtos/input/transaction.input";
+import type {
+  TransactionPaginationModel,
+  TransactionSummaryModel,
+} from "../model/transaction.model.js";
 
 export class TransactionService {
-  async findTransaction(id: string, userId: string): Promise<Transaction> {
+  async getTransaction(id: string, userId: string): Promise<Transaction> {
     const transaction = await prismaClient.transaction.findUnique({
       where: {
         id,
@@ -24,21 +30,34 @@ export class TransactionService {
     return transaction;
   }
 
-  async findTransactionList(userId: string): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        userId,
+  async getTransactions(
+    userId: string,
+    limit?: number,
+  ): Promise<Transaction[]> {
+    const queryArgs: Prisma.TransactionFindManyArgs = {
+      where: { userId },
+      orderBy: {
+        date: "desc",
       },
-    });
+    };
 
-    if (!transactions || transactions.length === 0) {
+    if (limit) {
+      queryArgs.take = limit;
+    }
+
+    const transactions = await prismaClient.transaction.findMany(queryArgs);
+
+    if (!transactions) {
       throw new Error("Transactions not found!");
     }
 
     return transactions;
   }
 
-  async createTransaction(data: CreateTransactionInput, userId: string) {
+  async createTransaction(
+    data: CreateTransactionInput,
+    userId: string,
+  ): Promise<Transaction> {
     return await prismaClient.transaction.create({
       data: {
         type: data.type,
@@ -51,7 +70,10 @@ export class TransactionService {
     });
   }
 
-  async updateTransaction(data: UpdateTransactionInput, userId: string) {
+  async updateTransaction(
+    data: UpdateTransactionInput,
+    userId: string,
+  ): Promise<Transaction> {
     return await prismaClient.transaction.update({
       where: {
         id: data.id,
@@ -67,7 +89,10 @@ export class TransactionService {
     });
   }
 
-  async deleteTransaction(transactionId: string, userId: string) {
+  async deleteTransaction(
+    transactionId: string,
+    userId: string,
+  ): Promise<Transaction> {
     return await prismaClient.transaction.delete({
       where: {
         id: transactionId,
@@ -76,82 +101,150 @@ export class TransactionService {
     });
   }
 
-  async findTransactionByDescription(
-    description: string,
+  async getTransactionByFilter(
+    filter: TransactionFilterInput,
     userId: string,
-  ): Promise<Transaction[]> {
-    console.info({ description });
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        description: {
-          contains: description,
-        },
-        userId,
-      },
-    });
+    page = 1,
+    pageSize = 10,
+  ): Promise<TransactionPaginationModel> {
+    const where: Prisma.TransactionWhereInput = {
+      userId,
+    };
 
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
+    if (filter.description) {
+      where.description = {
+        contains: filter.description,
+      };
     }
 
-    return transactions;
+    if (filter.type) {
+      where.type = filter.type;
+    }
+
+    if (filter.categoryId) {
+      where.categoryId = filter.categoryId;
+    }
+
+    if (filter.startDate && filter.endDate) {
+      where.date = {
+        gte: filter.startDate,
+        lte: filter.endDate,
+      };
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const [transactions, total] = await Promise.all([
+      prismaClient.transaction.findMany({
+        where,
+        orderBy: {
+          date: "desc",
+        },
+        skip,
+        take: pageSize,
+        include: {
+          category: true,
+        },
+      }),
+
+      prismaClient.transaction.count({
+        where,
+      }),
+    ]);
+
+    return {
+      transactions,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
-  async findTransactionByType(
+  async getTotalFinancialSummary(
+    userId: string,
+  ): Promise<TransactionSummaryModel> {
+    const [incomes, expenses] = await Promise.all([
+      prismaClient.transaction.aggregate({
+        where: { userId, type: TransactionType.income },
+        _sum: { amount: true },
+      }),
+      prismaClient.transaction.aggregate({
+        where: { userId, type: TransactionType.expense },
+        _sum: { amount: true },
+      }),
+    ]);
+
+    const income = Number(incomes._sum.amount || 0);
+    const expense = Number(expenses._sum.amount || 0);
+
+    return {
+      balance: income - expense,
+      expense,
+      income,
+    };
+  }
+
+  async getCurrentMonthFinancialSummary(
+    userId: string,
+  ): Promise<TransactionSummaryModel> {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+
+    const [income, expense] = await Promise.all([
+      this.getMonthIncomeAmount(userId, {
+        year: currentYear,
+        month: currentMonth,
+      }),
+      this.getMonthExpenseAmount(userId, {
+        year: currentYear,
+        month: currentMonth,
+      }),
+    ]);
+
+    return {
+      balance: income - expense,
+      expense,
+      income,
+    };
+  }
+
+  getMonthIncomeAmount = async (
+    userId: string,
+    { year, month }: { year: number; month: number },
+  ): Promise<number> =>
+    this.getMonthTransactionAmountByType(userId, TransactionType.income, {
+      year,
+      month,
+    });
+
+  getMonthExpenseAmount = async (
+    userId: string,
+    { year, month }: { year: number; month: number },
+  ): Promise<number> =>
+    this.getMonthTransactionAmountByType(userId, TransactionType.expense, {
+      year,
+      month,
+    });
+
+  private async getMonthTransactionAmountByType(
+    userId: string,
     type: TransactionType,
-    userId: string,
-  ): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
+    { year, month }: { year: number; month: number },
+  ): Promise<number> {
+    const startOfMonth = new Date(year, month, 1);
+    const endOfMonth = new Date(year, month + 1, 0);
+
+    const transactions = await prismaClient.transaction.aggregate({
       where: {
-        type,
         userId,
+        type: type,
+        date: { gte: startOfMonth, lte: endOfMonth },
       },
+      _sum: { amount: true },
     });
 
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
-    }
-
-    return transactions;
-  }
-
-  async findTransactionByCategory(
-    categoryId: string,
-    userId: string,
-  ): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        categoryId,
-        userId,
-      },
-    });
-
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
-    }
-
-    return transactions;
-  }
-
-  async findTransactionByDateRange(
-    startDate: Date,
-    endDate: Date,
-    userId: string,
-  ): Promise<Transaction[]> {
-    const transactions = await prismaClient.transaction.findMany({
-      where: {
-        date: {
-          gte: startDate,
-          lte: endDate,
-        },
-        userId,
-      },
-    });
-
-    if (!transactions || transactions.length === 0) {
-      throw new Error("Transactions not found!");
-    }
-
-    return transactions;
+    return Number(transactions._sum.amount || 0);
   }
 }

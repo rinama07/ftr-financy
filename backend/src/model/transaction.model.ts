@@ -1,4 +1,4 @@
-import { Field, GraphQLISODateTime, ID, ObjectType } from "type-graphql";
+import { Field, GraphQLISODateTime, ID, Int, ObjectType } from "type-graphql";
 
 import { Prisma } from "../../generated/prisma/client";
 import type { TransactionType } from "../../generated/prisma/enums";
@@ -39,4 +39,34 @@ export class TransactionModel {
 
   @Field(() => UserModel, { nullable: true })
   user?: UserModel;
+}
+
+@ObjectType()
+export class TransactionSummaryModel {
+  @Field(() => Number)
+  balance!: number;
+
+  @Field(() => Number)
+  expense!: number;
+
+  @Field(() => Number)
+  income!: number;
+}
+
+@ObjectType()
+export class TransactionPaginationModel {
+  @Field(() => [TransactionModel])
+  transactions!: TransactionModel[];
+
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  page!: number;
+
+  @Field(() => Int)
+  pageSize!: number;
+
+  @Field(() => Int)
+  totalPages!: number;
 }

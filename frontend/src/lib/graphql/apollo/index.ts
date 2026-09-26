@@ -1,0 +1,30 @@
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+import { SetContextLink } from "@apollo/client/link/context";
+
+import { useAuthStore } from "@/store/auth/auth.store";
+import { errorLink } from "./error-link";
+
+const httpLink = new HttpLink({
+  uri: import.meta.env.VITE_BACKEND_URL,
+});
+
+const authLink = new SetContextLink((prevContext) => {
+  const token = useAuthStore.getState().token;
+
+  return {
+    headers: {
+      ...prevContext.headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+export const apolloClient = new ApolloClient({
+  link: ApolloLink.from([authLink, errorLink, httpLink]),
+  cache: new InMemoryCache(),
+});
