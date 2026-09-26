@@ -39,9 +39,13 @@ export function TextField({
         <InputGroupInput {...props} id={id} type={type} />
       </InputGroup>
 
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && description.length > 0 && (
+        <FieldDescription>{description}</FieldDescription>
+      )}
 
-      {errorMessage && <FieldError>{errorMessage}</FieldError>}
+      {errorMessage && errorMessage.length > 0 && (
+        <FieldError>{errorMessage}</FieldError>
+      )}
     </Field>
   );
 }
