@@ -1,21 +1,17 @@
-import clsx from "clsx";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { PrimaryButton } from "@/components/buttons/PrimaryButton";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { FieldDescription } from "@/components/ui/field";
 import type { Category } from "@/types";
-import type { Transaction } from "@/types/Transaction";
+import type { Transaction, TransactionType } from "@/types/Transaction";
+import { CurrencyField } from "../forms/CurrencyField";
 import { DateField } from "../forms/DateField";
+import { DropdownField } from "../forms/DropdownField";
+import { RadioField, type RadioOption } from "../forms/RadioField";
 import { TextField } from "../forms/TextField";
-import { toDateInputValue } from "./transaction.utils";
+import { getCategoryOptions, toDateInputValue } from "./transaction.utils";
 
 export type TransactionFormValues = Pick<
   Transaction,
@@ -41,6 +37,21 @@ const DEFAULT_VALUES: TransactionFormValues = {
   amount: "",
   categoryId: "",
 };
+
+const TRANSACTION_TYPE_OPTIONS = [
+  {
+    value: "expense",
+    label: "Despesa",
+    icon: <ArrowDownCircle className="text-red-base" />,
+    selectedClassName: "border border-red-base text-gray-800",
+  },
+  {
+    value: "income",
+    label: "Receita",
+    icon: <ArrowUpCircle className="text-green-base" />,
+    selectedClassName: "border border-green-base",
+  },
+] satisfies RadioOption<TransactionType>[];
 
 export function TransactionForm({
   transaction,
@@ -91,7 +102,6 @@ export function TransactionForm({
     reset({
       ...DEFAULT_VALUES,
       date: toDateInputValue(new Date()),
-      categoryId: categories[0]?.id ?? "",
     });
   }, [transaction, categories, reset]);
 
@@ -107,50 +117,18 @@ export function TransactionForm({
 
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
-      <Field>
-        <FieldLabel>Tipo</FieldLabel>
-
-        <div className="grid grid-cols-2 gap-2 rounded-md border p-2">
-          <Button
-            type="button"
-            variant="ghost"
-            aria-pressed={selectedType === "expense"}
-            className={clsx(
-              "h-11 justify-center gap-2",
-              selectedType === "expense" &&
-                "border border-red-base text-gray-800",
-            )}
-            onClick={() =>
-              setValue("type", "expense", {
-                shouldDirty: true,
-                shouldValidate: true,
-              })
-            }
-          >
-            <ArrowDownCircle className="text-red-base" />
-            Despesa
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            aria-pressed={selectedType === "income"}
-            className={clsx(
-              "h-11 justify-center gap-2",
-              selectedType === "income" && "border border-green-base",
-            )}
-            onClick={() =>
-              setValue("type", "income", {
-                shouldDirty: true,
-                shouldValidate: true,
-              })
-            }
-          >
-            <ArrowUpCircle className="text-green-base" />
-            Receita
-          </Button>
-        </div>
-      </Field>
+      <RadioField
+        id="transaction-type"
+        label="Tipo"
+        value={selectedType}
+        options={TRANSACTION_TYPE_OPTIONS}
+        onChange={(type) =>
+          setValue("type", type, {
+            shouldDirty: true,
+            shouldValidate: true,
+          })
+        }
+      />
 
       <TextField
         aria-invalid={!!errors.description}
@@ -183,77 +161,57 @@ export function TransactionForm({
           })}
         />
 
-        <Field>
-          <FieldLabel htmlFor="transaction-amount">Valor</FieldLabel>
+        <CurrencyField
+          aria-invalid={!!errors.amount}
+          id="transaction-amount"
+          label="Valor"
+          errorMessage={errors.amount?.message}
+          {...register("amount", {
+            required: "O valor é obrigatório",
+            validate: (value) => {
+              const amount = Number((value ?? "")?.replace(",", "."));
 
-          <InputGroup>
-            <InputGroupAddon>R$</InputGroupAddon>
+              if (Number.isNaN(amount)) {
+                return "Informe um valor válido";
+              }
 
-            <InputGroupInput
-              id="transaction-amount"
-              inputMode="decimal"
-              placeholder="0,00"
-              aria-invalid={!!errors.amount}
-              {...register("amount", {
-                required: "O valor é obrigatório",
-                validate: (value) => {
-                  const amount = Number((value ?? "")?.replace(",", "."));
+              if (amount <= 0) {
+                return "O valor deve ser maior que zero";
+              }
 
-                  if (Number.isNaN(amount)) {
-                    return "Informe um valor válido";
-                  }
-
-                  if (amount <= 0) {
-                    return "O valor deve ser maior que zero";
-                  }
-
-                  return true;
-                },
-              })}
-            />
-          </InputGroup>
-
-          {errors.amount && <FieldError>{errors.amount.message}</FieldError>}
-        </Field>
+              return true;
+            },
+          })}
+        />
       </div>
 
-      <Field>
-        <FieldLabel htmlFor="transaction-category">Categoria</FieldLabel>
-
-        <select
-          id="transaction-category"
-          className={clsx(
-            "h-10 w-full rounded-md border border-input",
-            "bg-background px-3 text-sm outline-none",
-            "focus:border-ring focus:ring-3 focus:ring-ring/30",
-          )}
-          disabled={categoriesLoading || categoriesError || loading}
-          aria-invalid={!!errors.categoryId}
-          {...register("categoryId", {
+      <div className="flex flex-col gap-1">
+        <Controller
+          name="categoryId"
+          control={control}
+          rules={{
             required: "A categoria é obrigatória",
-          })}
-        >
-          <option value="">
-            {categoriesLoading ? "Carregando..." : "Selecione"}
-          </option>
-
-          {categoryOptions.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.title}
-            </option>
-          ))}
-        </select>
-
-        {errors.categoryId && (
-          <FieldError>{errors.categoryId.message}</FieldError>
-        )}
+          }}
+          render={({ field, fieldState }) => (
+            <DropdownField
+              id="transaction-category"
+              label="Categoria"
+              aria-invalid={!!fieldState.error}
+              disabled={categoriesLoading || categoriesError || loading}
+              errorMessage={fieldState.error?.message}
+              onValueChange={field.onChange}
+              options={getCategoryOptions(categoryOptions)}
+              value={field.value}
+            />
+          )}
+        />
 
         {categoriesError && (
-          <p role="alert" className="text-sm text-destructive">
+          <FieldDescription className="text-sm text-destructive">
             Não foi possível carregar as categorias.
-          </p>
+          </FieldDescription>
         )}
-      </Field>
+      </div>
 
       {errorMessage && (
         <p role="alert" className="text-sm text-destructive">

@@ -12,13 +12,22 @@ export interface TransactionFilterState {
   period: string;
 }
 
+export function getCategoryOptions(
+  categories: Category[],
+): DropdownOption<string>[] {
+  return categories.map((category) => ({
+    label: category.title,
+    value: category.id,
+  }));
+}
+
 export function getCurrentPeriod(): string {
   const now = new Date();
 
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }
 
-export function getTypeOptions(): DropdownOption<TransactionTypeFilter>[] {
+export function getTypeFilterOptions(): DropdownOption<TransactionTypeFilter>[] {
   return [
     {
       label: "Todos",
@@ -35,7 +44,7 @@ export function getTypeOptions(): DropdownOption<TransactionTypeFilter>[] {
   ];
 }
 
-export function getCategoriesOptions(
+export function getCategoryFilterOptions(
   categories: Category[],
 ): DropdownOption<string>[] {
   const options = categories.map((category) => ({
@@ -46,7 +55,7 @@ export function getCategoriesOptions(
   return [{ label: "Todas", value: "all" }, ...options];
 }
 
-export function getMonthOptions(count = 24): DropdownOption<string>[] {
+export function getMonthFilterOptions(count = 24): DropdownOption<string>[] {
   const now = new Date();
 
   return Array.from({ length: count }, (_, index) => {

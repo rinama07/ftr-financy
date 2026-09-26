@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
@@ -29,33 +30,32 @@ export function TransactionTable({
   onEdit,
   onDelete,
 }: TransactionTableProps) {
+  const tableHeaderClassName =
+    "px-6 py-4 text-xs font-medium uppercase tracking-wide text-gray-500";
+
   return (
     <Card className="overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-230 w-full">
           <thead>
             <tr className="border-b bg-background">
-              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              <th className={clsx(tableHeaderClassName, "text-left")}>
                 Descrição
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                Data
-              </th>
+              <th className={clsx(tableHeaderClassName, "text-left")}>Data</th>
 
-              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              <th className={clsx(tableHeaderClassName, "text-left")}>
                 Categoria
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                Tipo
-              </th>
+              <th className={clsx(tableHeaderClassName, "text-left")}>Tipo</th>
 
-              <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
+              <th className={clsx(tableHeaderClassName, "text-right")}>
                 Valor
               </th>
 
-              <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
+              <th className={clsx(tableHeaderClassName, "text-right")}>
                 Ações
               </th>
             </tr>
@@ -131,7 +131,7 @@ export function TransactionTable({
                     }`}
                   >
                     {formatTransactionAmount(
-                      transaction.amount,
+                      transaction.amount ?? 0,
                       transaction.type,
                     )}
                   </td>

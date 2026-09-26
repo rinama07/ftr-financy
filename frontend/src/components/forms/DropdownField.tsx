@@ -1,4 +1,11 @@
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import type { ComponentProps } from "react";
+
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -13,37 +20,28 @@ export interface DropdownOption<T extends string> {
   label: string;
 }
 
-interface DropdownFieldProps<T extends string> {
-  disabled?: boolean;
+type DropdownFieldProps<T extends string> = ComponentProps<typeof Select> & {
   description?: string;
-  id: string;
+  errorMessage?: string;
   label: string;
   options: DropdownOption<T>[];
-  value: T;
-  onChange: (value: T) => void;
-}
+};
 
 export function DropdownField<T extends string>({
-  disabled = false,
   description,
+  errorMessage,
   id,
   label,
   options,
-  value,
-  onChange,
+  ...props
 }: DropdownFieldProps<T>) {
   return (
     <Field className="w-full h-full">
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
 
-      <Select
-        items={options}
-        value={value}
-        onValueChange={(value) => onChange(value as T)}
-        disabled={disabled}
-      >
+      <Select items={options} {...props}>
         <SelectTrigger id={id}>
-          <SelectValue />
+          <SelectValue placeholder="Selecione" />
         </SelectTrigger>
 
         <SelectContent>
@@ -57,7 +55,13 @@ export function DropdownField<T extends string>({
         </SelectContent>
       </Select>
 
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && description.length > 0 && (
+        <FieldDescription>{description}</FieldDescription>
+      )}
+
+      {errorMessage && errorMessage.length > 0 && (
+        <FieldError>{errorMessage}</FieldError>
+      )}
     </Field>
   );
 }

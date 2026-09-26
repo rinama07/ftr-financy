@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card";
 import type { Category } from "@/types";
+import type { TransactionTypeFilter } from "@/types/Transaction";
 import { DropdownField } from "../forms/DropdownField";
 import { TextField } from "../forms/TextField";
 import {
-  getCategoriesOptions,
-  getMonthOptions,
-  getTypeOptions,
+  getCategoryFilterOptions,
+  getMonthFilterOptions,
+  getTypeFilterOptions,
   type TransactionFilterState,
 } from "./transaction.utils";
 
@@ -53,10 +54,10 @@ export function TransactionFilters({
           id="transaction-type"
           label="Tipo"
           value={filters.type}
-          options={getTypeOptions()}
-          onChange={(type) =>
+          options={getTypeFilterOptions()}
+          onValueChange={(type) =>
             onChange({
-              type,
+              type: type as TransactionTypeFilter,
             })
           }
         />
@@ -65,10 +66,10 @@ export function TransactionFilters({
           id="transaction-category"
           label="Categoria"
           value={filters.categoryId}
-          options={getCategoriesOptions(categories)}
-          onChange={(categoryId) =>
+          options={getCategoryFilterOptions(categories)}
+          onValueChange={(categoryId) =>
             onChange({
-              categoryId,
+              categoryId: categoryId as string,
             })
           }
         />
@@ -77,10 +78,10 @@ export function TransactionFilters({
           id="transaction-period"
           label="Período"
           value={filters.period}
-          options={getMonthOptions()}
-          onChange={(period) =>
+          options={getMonthFilterOptions()}
+          onValueChange={(period) =>
             onChange({
-              period,
+              period: period as string,
             })
           }
         />
