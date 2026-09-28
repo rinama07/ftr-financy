@@ -1,4 +1,5 @@
-import { Pencil, Trash2 } from "lucide-react";
+import clsx from "clsx";
+import { SquarePen, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -27,10 +28,13 @@ export function CategoryCard({
   const transactionLabel = category.transactionsCount == 1 ? "item" : "itens";
 
   return (
-    <Card className="flex h-full flex-col p-6 transition-shadow hover:shadow-sm">
+    <Card className="flex h-full gap-5 flex-col p-6 transition-shadow hover:shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div
-          className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${theme.icon}`}
+          className={clsx(
+            "flex size-10 shrink-0 items-center justify-center rounded-lg",
+            theme.icon,
+          )}
         >
           <Icon className="size-5" />
         </div>
@@ -44,7 +48,7 @@ export function CategoryCard({
             className="text-destructive hover:text-destructive"
             onClick={() => onDelete(category)}
           >
-            <Trash2 />
+            <Trash />
           </Button>
 
           <Button
@@ -54,7 +58,7 @@ export function CategoryCard({
             aria-label={`Editar ${category.title}`}
             onClick={() => onEdit(category)}
           >
-            <Pencil />
+            <SquarePen />
           </Button>
         </div>
       </div>
@@ -71,7 +75,10 @@ export function CategoryCard({
 
       <div className="mt-auto flex items-center justify-between gap-4 pt-6">
         <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${theme.badge}`}
+          className={clsx(
+            "rounded-full px-3 py-1 text-xs font-medium",
+            theme.badge,
+          )}
         >
           {category.title}
         </span>

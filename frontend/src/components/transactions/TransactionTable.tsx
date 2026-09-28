@@ -31,10 +31,10 @@ export function TransactionTable({
   onDelete,
 }: TransactionTableProps) {
   const tableHeaderClassName =
-    "px-6 py-4 text-xs font-medium uppercase tracking-wide text-gray-500";
+    "px-6 py-5 text-xs font-medium uppercase tracking-wide text-gray-500";
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden p-0">
       <div className="overflow-x-auto">
         <table className="min-w-230 w-full">
           <thead>
@@ -80,7 +80,10 @@ export function TransactionTable({
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       <div
-                        className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${theme.icon}`}
+                        className={clsx(
+                          "flex size-10 shrink-0 items-center justify-center rounded-lg",
+                          theme.icon,
+                        )}
                       >
                         <Icon className="size-5" />
                       </div>
@@ -98,7 +101,10 @@ export function TransactionTable({
                   <td className="px-6 py-4">
                     {category ? (
                       <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${theme.badge}`}
+                        className={clsx(
+                          "inline-flex rounded-full px-3 py-1 text-xs font-medium",
+                          theme.badge,
+                        )}
                       >
                         {category.title}
                       </span>
@@ -111,9 +117,10 @@ export function TransactionTable({
 
                   <td className="px-6 py-4">
                     <div
-                      className={`flex items-center gap-2 text-sm ${
-                        isIncome ? "text-green-600" : "text-red-600"
-                      }`}
+                      className={clsx(
+                        "flex items-center gap-2 text-sm",
+                        isIncome ? "text-green-600" : "text-red-600",
+                      )}
                     >
                       {isIncome ? (
                         <ArrowUpCircle className="size-4" />
@@ -126,9 +133,10 @@ export function TransactionTable({
                   </td>
 
                   <td
-                    className={`whitespace-nowrap px-6 py-4 text-right text-sm font-semibold ${
-                      isIncome ? "text-gray-900" : "text-gray-900"
-                    }`}
+                    className={clsx(
+                      "whitespace-nowrap px-6 py-4 text-right text-sm font-semibold",
+                      isIncome ? "text-gray-900" : "text-gray-900",
+                    )}
                   >
                     {formatTransactionAmount(
                       transaction.amount ?? 0,

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ArrowUpDown, Tag, Utensils } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -34,13 +35,13 @@ export function CategoryHighlights({ categories }: CategoryHighlightsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
       {highlights.map(({ icon: Icon, value, label, iconClassName }) => (
         <Card
           key={label}
           className="flex min-h-26 flex-row items-start gap-4 p-6"
         >
-          <Icon className={`size-8 ${iconClassName}`} />
+          <Icon className={clsx("size-8", iconClassName)} />
 
           <div className="min-w-0">
             <span className="block truncate text-2xl font-bold text-gray-800">

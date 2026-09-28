@@ -3,7 +3,9 @@ import { useQuery } from "@apollo/client/react";
 import { GET_CATEGORIES } from "@/lib/graphql/category/queries";
 
 export function useCategories() {
-  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
+  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES, {
+    fetchPolicy: "cache-and-network",
+  });
 
   return {
     refetch,
