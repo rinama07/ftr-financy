@@ -235,7 +235,7 @@ export function TransactionsPage() {
             </p>
           </Card>
         ) : (
-          <Card className="overflow-hidden">
+          <>
             <TransactionTable
               transactions={transactions}
               onEdit={handleEdit}
@@ -249,7 +249,7 @@ export function TransactionsPage() {
               totalPages={totalPages}
               onPageChange={setPage}
             />
-          </Card>
+          </>
         )}
       </div>
 

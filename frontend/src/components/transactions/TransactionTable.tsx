@@ -31,10 +31,10 @@ export function TransactionTable({
   onDelete,
 }: TransactionTableProps) {
   const tableHeaderClassName =
-    "px-6 py-4 text-xs font-medium uppercase tracking-wide text-gray-500";
+    "px-6 py-5 text-xs font-medium uppercase tracking-wide text-gray-500";
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden p-0">
       <div className="overflow-x-auto">
         <table className="min-w-230 w-full">
           <thead>
