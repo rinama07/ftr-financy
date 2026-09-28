@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ArrowDownCircle, ArrowRight, ArrowUpCircle, Plus } from "lucide-react";
 import { Link } from "react-router";
 
@@ -34,7 +35,7 @@ export function DashboardRecentTransactions({
 }: DashboardRecentTransactionsProps) {
   return (
     <Card className="gap-0 overflow-hidden p-0">
-      <div className="flex items-center justify-between border-b px-6 py-4">
+      <div className="flex items-center justify-between border-b px-6 py-5">
         <h2 className="text-xs font-medium uppercase tracking-wider text-gray-500">
           Transações recentes
         </h2>
@@ -67,7 +68,7 @@ export function DashboardRecentTransactions({
             return (
               <div
                 key={`${transaction.description}-${transaction.date}-${transaction.amount}`}
-                className="flex flex-wrap items-center gap-3 border-b px-6 py-4 last:border-b-0 sm:flex-nowrap"
+                className="flex flex-wrap items-center gap-3 border-b px-6 py-4 sm:flex-nowrap"
               >
                 <div
                   className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${categoryTheme.badge}`}
@@ -86,7 +87,10 @@ export function DashboardRecentTransactions({
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${categoryTheme.badge}`}
+                  className={clsx(
+                    "rounded-full px-3 py-1 text-xs font-medium",
+                    categoryTheme.badge,
+                  )}
                 >
                   {transaction.category.title}
                 </span>
