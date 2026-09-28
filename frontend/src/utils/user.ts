@@ -1,10 +1,12 @@
-export function getUserNameInitials(userName: string) {
+export function getUserNameInitials(name: string) {
+  const userName = name.trim();
+
   if (!userName) {
     return "";
   }
 
   return userName
-    .trim()
+
     .split(/\s+/)
     .slice(0, 2)
     .map((word) => word[0].toUpperCase())
