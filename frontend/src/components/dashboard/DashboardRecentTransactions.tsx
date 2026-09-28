@@ -71,9 +71,12 @@ export function DashboardRecentTransactions({
                 className="flex flex-wrap items-center gap-3 border-b px-6 py-4 sm:flex-nowrap"
               >
                 <div
-                  className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${categoryTheme.badge}`}
+                  className={clsx(
+                    "flex size-10 shrink-0 items-center justify-center rounded-lg",
+                    categoryTheme.badge,
+                  )}
                 >
-                  <Icon className={`size-5 ${categoryTheme.icon}`} />
+                  <Icon className={clsx("size-5", categoryTheme.icon)} />
                 </div>
 
                 <div className="min-w-0 flex-1">

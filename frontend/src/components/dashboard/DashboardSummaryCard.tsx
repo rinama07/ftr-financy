@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { LucideIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -18,7 +19,7 @@ export function DashboardSummaryCard({
   return (
     <Card className="gap-3 p-6">
       <div className="flex items-center gap-2">
-        <Icon className={`size-5 ${iconClassName}`} />
+        <Icon className={clsx("size-5", iconClassName)} />
 
         <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
           {label}
